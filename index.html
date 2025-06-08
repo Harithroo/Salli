@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Budget Tracker</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+
+<body>
+  <div id="app"></div>
+  <div id="app">
+    <h1>Budget Tracker</h1>
+    <form id="entryForm">
+      <input type="text" id="desc" placeholder="Description" required>
+      <input type="number" id="amount" placeholder="Amount" required>
+      <button type="submit">Add</button>
+    </form>
+    <ul id="entries"></ul>
+  </div>
+  <!-- Umbrella.js -->
+  <script src="https://unpkg.com/umbrella-js@3.0.0/dist/umbrella-min.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
