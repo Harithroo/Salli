@@ -12,10 +12,54 @@
   <div id="app">
     <h1>Budget Tracker</h1>
     <form id="entryForm">
-      <input type="text" id="desc" placeholder="Description" required>
-      <input type="number" id="amount" placeholder="Amount" required>
-      <button type="submit">Add</button>
+      <label>Date & Time: <input type="datetime-local" id="datetime" required></label>
+
+      <label>Account:
+        <select id="account">
+          <option value="Wallet">Wallet</option>
+          <option value="Bank - Frimi">Bank - Frimi</option>
+          <option value="Bank - NSB">Bank - NSB</option>
+          <option value="Bank - Commercial">Bank - Commercial</option>
+        </select>
+      </label>
+
+      <label>Category:
+        <select id="category">
+          <option value="Prior savings">Prior savings</option>
+          <option value="Expenses">Expenses</option>
+          <option value="Banking">Banking</option>
+        </select>
+      </label>
+
+      <label>Subcategory:
+        <input type="text" id="subcategory">
+      </label>
+
+      <label>Note:
+        <input type="text" id="note">
+      </label>
+
+      <label>Description:
+        <input type="text" id="description">
+      </label>
+
+      <label>Type:
+        <select id="type">
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+      </label>
+
+      <label>Amount (LKR):
+        <input type="number" id="amount" step="0.01" required>
+      </label>
+
+      <button type="submit" id="submitBtn">Add</button>
     </form>
+    <button onclick="exportEntries('csv')">Export CSV</button>
+    <button onclick="exportEntries('tsv')">Export TSV</button>
+
+    <input type="file" id="importFile" accept=".csv,.tsv">
     <ul id="entries"></ul>
   </div>
   <!-- correct Umbrella.js import -->
