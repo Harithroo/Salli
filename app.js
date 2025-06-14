@@ -1,3 +1,8 @@
+const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const DRIVE_KEY = 'budgetDriveFileId';
+const entriesKey = 'entries';
+
 // 1. Register service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
@@ -136,5 +141,118 @@ u('#importFile').on('change', e => {
     importEntries(file, isTSV ? 'tsv' : 'csv');
   }
 });
+
+function initGapi() {
+  // Load the gapi.client library
+  gapi.load('client:auth2', () => {
+    gapi.client.init({ clientId: CLIENT_ID, scope: SCOPES });
+  });
+}
+// Called by <script src="https://apis.google.com/js/api.js">
+window.onGapiLoad = initGapi;
+
+// --------------- DRIVE FUNCTIONS --------------
+async function backupToDrive() {
+  const statusEl = u('#backupStatus').first();
+  statusEl.textContent = 'Backing up…';
+
+  // Ensure user is signed in
+  const GoogleAuth = gapi.auth2.getAuthInstance();
+  if (!GoogleAuth.isSignedIn.get()) {
+    await GoogleAuth.signIn();
+  }
+
+  // Set the token for subsequent requests
+  const token = GoogleAuth.currentUser.get().getAuthResponse().access_token;
+  gapi.client.setToken({ access_token: token });
+
+  // Prepare file content
+  const entries = JSON.parse(localStorage.getItem(entriesKey) || '[]');
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const metadata = {
+    name: 'budget-backup.json',
+    mimeType: 'application/json'
+  };
+
+  const driveFileId = localStorage.getItem(DRIVE_KEY);
+  let request;
+  if (driveFileId) {
+    // Update existing file
+    request = gapi.client.drive.files.update({
+      fileId: driveFileId,
+      resource: metadata,
+      media: { mimeType: 'application/json', body: blob }
+    });
+  } else {
+    // Create new file
+    request = gapi.client.drive.files.create({
+      resource: metadata,
+      media: { mimeType: 'application/json', body: blob },
+      fields: 'id'
+    });
+  }
+
+  try {
+    const resp = await request;
+    const id = resp.result.id;
+    if (!driveFileId) localStorage.setItem(DRIVE_KEY, id);
+    statusEl.textContent = '✅ Backup successful';
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = '❌ Backup failed';
+  }
+}
+
+// --------- HOOK UP THE BACKUP BUTTON ---------
+u('#backupBtn').on('click', backupToDrive);
+
+// ------------ BOOTSTRAP GAPI INIT -------------
+// This assumes you’ve added `onload="onGapiLoad()"` to your <script> tag above,
+// or simply call initGapi() once your page & gapi.js have loaded.
+window.addEventListener('load', () => {
+  if (window.gapi) initGapi();
+});
+
+// -------- RESTORE FROM DRIVE --------
+async function restoreFromDrive() {
+  const statusEl = u('#restoreStatus').first();
+  statusEl.textContent = 'Restoring…';
+
+  const GoogleAuth = gapi.auth2.getAuthInstance();
+  if (!GoogleAuth.isSignedIn.get()) {
+    await GoogleAuth.signIn();
+  }
+
+  const token = GoogleAuth.currentUser.get().getAuthResponse().access_token;
+  gapi.client.setToken({ access_token: token });
+
+  const driveFileId = localStorage.getItem(DRIVE_KEY);
+  if (!driveFileId) {
+    statusEl.textContent = '❌ No backup file found. Please backup first.';
+    return;
+  }
+
+  try {
+    const resp = await gapi.client.drive.files.get({
+      fileId: driveFileId,
+      alt: 'media'
+    });
+
+    // resp.body contains the JSON text
+    const data = typeof resp.body === 'string'
+      ? JSON.parse(resp.body)
+      : resp.result; // fallback
+
+    localStorage.setItem(entriesKey, JSON.stringify(data));
+    render();
+    statusEl.textContent = '✅ Restore successful';
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = '❌ Restore failed';
+  }
+}
+
+// Hook up the restore button
+u('#restoreBtn').on('click', restoreFromDrive);
 
 render();

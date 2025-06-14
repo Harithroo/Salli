@@ -7,6 +7,9 @@
   <title>Budget Tracker</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
+  <script async defer src="https://accounts.google.com/gsi/client"></script>
+  <!-- Google API client -->
+  <script async defer src="https://apis.google.com/js/api.js"></script>
 </head>
 
 <body>
@@ -57,9 +60,15 @@
 
       <button type="submit" id="submitBtn">Add</button>
     </form>
+    <!-- Backup button -->
+    <button id="backupBtn">Backup to Drive</button>
+    <span id="backupStatus"></span>
+    <button id="restoreBtn">Restore from Drive</button>
+    <span id="restoreStatus"></span>
+    <!-- export -->
     <button onclick="exportEntries('csv')">Export CSV</button>
     <button onclick="exportEntries('tsv')">Export TSV</button>
-
+    <!-- import -->
     <input type="file" id="importFile" accept=".csv,.tsv">
     <ul id="entries"></ul>
   </div>
