@@ -44,8 +44,7 @@ function render() {
   });
 }
 
-// 3. Handle new entries
-
+// 3. Handle new entries/updates/deletes
 u('#entryForm').on('submit', ev => {
   ev.preventDefault();
   const all = JSON.parse(localStorage.getItem('entries') || '[]');
@@ -94,6 +93,7 @@ function fillFormForEdit(entry, index) {
   u('#submitBtn').text('Update');
 }
 
+// 4. Export
 function exportEntries(type = 'csv') {
   const entries = JSON.parse(localStorage.getItem('entries') || '[]');
   if (!entries.length) {
@@ -117,6 +117,7 @@ function exportEntries(type = 'csv') {
   a.click();
 }
 
+// 5. import
 function importEntries(file, type = 'csv') {
   const reader = new FileReader();
   const delimiter = type === 'tsv' ? '\t' : ',';
@@ -181,7 +182,7 @@ async function getOrCreateBackupFolder() {
   // Try to find the folder
   const folderListResp = await fetch(
     "https://www.googleapis.com/drive/v3/files?q=" +
-      encodeURIComponent("mimeType='application/vnd.google-apps.folder' and name='salli-backup' and trashed=false"),
+    encodeURIComponent("mimeType='application/vnd.google-apps.folder' and name='salli-backup' and trashed=false"),
     { headers: { Authorization: "Bearer " + accessToken } }
   );
   const folderList = await folderListResp.json();
