@@ -11,8 +11,6 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <script async defer src="https://accounts.google.com/gsi/client"></script>
-  <!-- Google API client (fires window.onGapiLoad when ready) -->
-  <script async defer src="https://apis.google.com/js/api.js?onload=onGapiLoad"></script>
 </head>
 
 <body>
@@ -76,21 +74,11 @@
       <input type="file" id="importFile" accept=".csv,.tsv">
     </div>
     <ul id="entries">
-      <li>
-        <div class="info">
-          <span>${e["Date and time"]}</span>
-          <span>${e["Account"]} • ${e["Income/Expense"]}</span>
-          <span>${e["Description"]}: Rs${...}</span>
-        </div>
-        <div class="controls">
-          <button data-edit="${i}">✏️</button>
-          <button data-delete="${i}">🗑️</button>
-        </div>
-      </li>
+      <!-- Entries will be rendered by JavaScript. Remove static example. -->
     </ul>
   </div>
   <!-- correct Umbrella.js import -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/umbrella/3.0.0/umbrella.min.js"></script>
+  <script src="libs/umbrella.min.js"></script>
   <script src="app.js"></script>
 </body>
 

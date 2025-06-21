@@ -2,7 +2,7 @@ const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const DRIVE_KEY = 'budgetDriveFileId';
 const entriesKey = 'entries';
-const FOLDER_ID = 'salli-backup';
+const FOLDER_ID = 'salli-backup'; // TODO: Replace with actual Google Drive folder ID if using Drive API
 
 // 1. Register service worker
 if ('serviceWorker' in navigator) {
@@ -149,61 +149,132 @@ u('#importFile').on('change', e => {
   }
 });
 
-function initGapi() {
-  // Load the gapi.client library
-  gapi.load('client:auth2', () => {
-    gapi.client.init({ clientId: CLIENT_ID, scope: SCOPES });
+// --- GOOGLE IDENTITY SERVICES (GIS) ---
+let accessToken = null;
+let tokenClient = null;
+
+window.onload = () => {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: (tokenResponse) => {
+      accessToken = tokenResponse.access_token;
+    },
   });
+  render();
+};
+
+async function ensureSignedIn() {
+  if (!accessToken) {
+    return new Promise((resolve) => {
+      tokenClient.callback = (tokenResponse) => {
+        accessToken = tokenResponse.access_token;
+        resolve();
+      };
+      tokenClient.requestAccessToken();
+    });
+  }
 }
-// Called by <script src="https://apis.google.com/js/api.js">
-window.onGapiLoad = initGapi;
+
+// --- Helper: Get or create the backup folder and return its ID ---
+async function getOrCreateBackupFolder() {
+  // Try to find the folder
+  const folderListResp = await fetch(
+    "https://www.googleapis.com/drive/v3/files?q=" +
+      encodeURIComponent("mimeType='application/vnd.google-apps.folder' and name='salli-backup' and trashed=false"),
+    { headers: { Authorization: "Bearer " + accessToken } }
+  );
+  const folderList = await folderListResp.json();
+  if (folderList.files && folderList.files.length > 0) {
+    return folderList.files[0].id;
+  }
+  // Create the folder if not found
+  const createResp = await fetch("https://www.googleapis.com/drive/v3/files", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + accessToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: "salli-backup",
+      mimeType: "application/vnd.google-apps.folder",
+    }),
+  });
+  const createData = await createResp.json();
+  return createData.id;
+}
+
+// --- Helper: Find backup file in folder ---
+async function findBackupFile(folderId) {
+  const q = `name='salli-backup.json' and '${folderId}' in parents and trashed=false`;
+  const resp = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}`,
+    { headers: { Authorization: "Bearer " + accessToken } }
+  );
+  const data = await resp.json();
+  return data.files && data.files.length > 0 ? data.files[0].id : null;
+}
 
 // --------------- DRIVE FUNCTIONS --------------
 async function backupToDrive() {
   const statusEl = u('#backupStatus').first();
   statusEl.textContent = 'Backing up…';
+  await ensureSignedIn();
 
-  // Ensure user is signed in
-  const GoogleAuth = gapi.auth2.getAuthInstance();
-  if (!GoogleAuth.isSignedIn.get()) {
-    await GoogleAuth.signIn();
-  }
+  const folderId = await getOrCreateBackupFolder();
+  const fileId = await findBackupFile(folderId);
 
-  // Set the token for subsequent requests
-  const token = GoogleAuth.currentUser.get().getAuthResponse().access_token;
-  gapi.client.setToken({ access_token: token });
-
-  // Prepare file content
   const entries = JSON.parse(localStorage.getItem(entriesKey) || '[]');
-  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+  const fileContent = JSON.stringify(entries, null, 2);
   const metadata = {
-    name: 'budget-backup.json',
+    name: 'salli-backup.json',
     mimeType: 'application/json',
-    parents: [FOLDER_ID]
+    parents: [folderId]
   };
 
-  const driveFileId = localStorage.getItem(DRIVE_KEY);
-  let request;
-  if (driveFileId) {
-    // Update existing file
-    request = gapi.client.drive.files.update({
-      fileId: driveFileId,
-      resource: metadata,
-      media: { mimeType: 'application/json', body: blob }
-    });
-  } else {
-    // Create new file
-    request = gapi.client.drive.files.create({
-      resource: metadata,
-      media: { mimeType: 'application/json', body: blob },
-      fields: 'id'
-    });
-  }
+  // Create multipart request body
+  const boundary = '-------314159265358979323846';
+  const delimiter = `\r\n--${boundary}\r\n`;
+  const closeDelim = `\r\n--${boundary}--`;
+  const multipartRequestBody =
+    delimiter +
+    'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+    JSON.stringify(metadata) +
+    delimiter +
+    'Content-Type: application/json\r\n\r\n' +
+    fileContent +
+    closeDelim;
 
   try {
-    const resp = await request;
-    const id = resp.result.id;
-    if (!driveFileId) localStorage.setItem(DRIVE_KEY, id);
+    let resp;
+    if (fileId) {
+      // Update existing file
+      resp = await fetch(
+        `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'multipart/related; boundary=' + boundary,
+          },
+          body: multipartRequestBody,
+        }
+      );
+    } else {
+      // Create new file
+      resp = await fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'multipart/related; boundary=' + boundary,
+          },
+          body: multipartRequestBody,
+        }
+      );
+    }
+    if (!resp.ok) throw new Error(await resp.text());
     statusEl.textContent = '✅ Backup successful';
   } catch (err) {
     console.error(err);
@@ -211,56 +282,45 @@ async function backupToDrive() {
   }
 }
 
-// --------- HOOK UP THE BACKUP BUTTON ---------
 u('#backupBtn').on('click', backupToDrive);
 
-// ------------ BOOTSTRAP GAPI INIT -------------
-// This assumes you’ve added `onload="onGapiLoad()"` to your <script> tag above,
-// or simply call initGapi() once your page & gapi.js have loaded.
-window.addEventListener('load', () => {
-  if (window.gapi) initGapi();
-});
-
-// -------- RESTORE FROM DRIVE --------
 async function restoreFromDrive() {
   const statusEl = u('#restoreStatus').first();
   statusEl.textContent = 'Restoring…';
-
-  const GoogleAuth = gapi.auth2.getAuthInstance();
-  if (!GoogleAuth.isSignedIn.get()) {
-    await GoogleAuth.signIn();
-  }
-
-  const token = GoogleAuth.currentUser.get().getAuthResponse().access_token;
-  gapi.client.setToken({ access_token: token });
-
-  const driveFileId = localStorage.getItem(DRIVE_KEY);
-  if (!driveFileId) {
-    statusEl.textContent = '❌ No backup file found. Please backup first.';
-    return;
-  }
-
   try {
-    const resp = await gapi.client.drive.files.get({
-      fileId: driveFileId,
-      alt: 'media'
-    });
+    // 1. Ensure we have an access token
+    await ensureSignedIn();
 
-    // resp.body contains the JSON text
-    const data = typeof resp.body === 'string'
-      ? JSON.parse(resp.body)
-      : resp.result; // fallback
+    // 2. Get (or create) the backup folder
+    const folderId = await getOrCreateBackupFolder();
 
+    // 3. Find the backup file in that folder
+    const fileId = await findBackupFile(folderId);
+    if (!fileId) {
+      throw new Error('No backup file found.');
+    }
+
+    // 4. Fetch the file contents
+    const resp = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+      { headers: { Authorization: 'Bearer ' + accessToken } }
+    );
+    if (!resp.ok) {
+      throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
+    }
+    const data = await resp.json();
+
+    // 5. Save locally & re-render
     localStorage.setItem(entriesKey, JSON.stringify(data));
     render();
     statusEl.textContent = '✅ Restore successful';
   } catch (err) {
     console.error(err);
-    statusEl.textContent = '❌ Restore failed';
+    statusEl.textContent = err.message.includes('No backup')
+      ? '❌ No backup file found. Please backup first.'
+      : '❌ Restore failed';
   }
 }
 
-// Hook up the restore button
+// And hook it up:
 u('#restoreBtn').on('click', restoreFromDrive);
-
-render();
