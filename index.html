@@ -63,17 +63,31 @@
 
       <button type="submit" id="submitBtn">Add</button>
     </form>
-    <!-- Backup button -->
-    <button id="backupBtn">Backup to Drive</button>
-    <span id="backupStatus"></span>
-    <button id="restoreBtn">Restore from Drive</button>
-    <span id="restoreStatus"></span>
-    <!-- export -->
-    <button onclick="exportEntries('csv')">Export CSV</button>
-    <button onclick="exportEntries('tsv')">Export TSV</button>
-    <!-- import -->
-    <input type="file" id="importFile" accept=".csv,.tsv">
-    <ul id="entries"></ul>
+    <div class="actions">
+      <!-- Backup button -->
+      <button id="backupBtn">Backup to Drive</button>
+      <span id="backupStatus"></span>
+      <button id="restoreBtn">Restore from Drive</button>
+      <span id="restoreStatus"></span>
+      <!-- export -->
+      <button onclick="exportEntries('csv')">Export CSV</button>
+      <button onclick="exportEntries('tsv')">Export TSV</button>
+      <!-- import -->
+      <input type="file" id="importFile" accept=".csv,.tsv">
+    </div>
+    <ul id="entries">
+      <li>
+        <div class="info">
+          <span>${e["Date and time"]}</span>
+          <span>${e["Account"]} • ${e["Income/Expense"]}</span>
+          <span>${e["Description"]}: Rs${...}</span>
+        </div>
+        <div class="controls">
+          <button data-edit="${i}">✏️</button>
+          <button data-delete="${i}">🗑️</button>
+        </div>
+      </li>
+    </ul>
   </div>
   <!-- correct Umbrella.js import -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/umbrella/3.0.0/umbrella.min.js"></script>

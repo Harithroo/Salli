@@ -17,9 +17,15 @@ function render() {
   entries.forEach((e, i) => {
     const li = document.createElement('li');
     li.innerHTML = `
-      ${e["Date and time"]} • ${e["Account"]} • ${e["Income/Expense"]} • ${e["Description"]}: Rs${parseFloat(e["Amount"]).toFixed(2)}
-      <button data-edit="${i}">✏️</button>
-      <button data-delete="${i}">🗑️</button>
+      <div class="info">
+        <span>${e["Date and time"]}</span>
+        <span>${e["Account"]} • ${e["Income/Expense"]}</span>
+        <span>${e["Description"]}: Rs${parseFloat(e["Amount"]).toFixed(2)}</span>
+      </div>
+      <div class="controls">
+        <button data-edit="${i}">✏️</button>
+        <button data-delete="${i}">🗑️</button>
+      </div>
     `;
     u('#entries').append(li);
   });
