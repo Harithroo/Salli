@@ -1,6 +1,6 @@
 {
-    "name": "Budget Tracker",
-    "short_name": "Budget",
+    "name": "Salli",
+    "short_name": "Salli",
     "start_url": ".",
     "display": "standalone",
     "icons": [
