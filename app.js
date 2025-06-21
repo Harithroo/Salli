@@ -2,6 +2,7 @@ const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const DRIVE_KEY = 'budgetDriveFileId';
 const entriesKey = 'entries';
+const FOLDER_ID = 'salli-backup';
 
 // 1. Register service worker
 if ('serviceWorker' in navigator) {
@@ -171,7 +172,8 @@ async function backupToDrive() {
   const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
   const metadata = {
     name: 'budget-backup.json',
-    mimeType: 'application/json'
+    mimeType: 'application/json',
+    parents: [FOLDER_ID]
   };
 
   const driveFileId = localStorage.getItem(DRIVE_KEY);
