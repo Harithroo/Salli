@@ -13,6 +13,8 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  position: relative;
+  padding-bottom: 60px; /* Space for bottom nav */
 }
 
 /* Header */
@@ -140,8 +142,68 @@ ul#entries li .controls button:hover {
   background: #ddd;
 }
 
-/* Mobile adjustments */
+/* Page sections */
+.page {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Bottom navigation bar */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(44,123,229,0.06);
+}
+
+.bottom-nav .nav-btn {
+  background: none;
+  border: none;
+  outline: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #2c7be5;
+  padding: 0.2rem 0;
+  cursor: pointer;
+  transition: background 0.15s;
+  height: 100%;
+  justify-content: center;
+}
+
+.bottom-nav .nav-btn span:first-child {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.bottom-nav .nav-btn.active,
+.bottom-nav .nav-btn:focus {
+  background: #eaf2fd;
+  color: #1a68d1;
+}
+
 @media (max-width: 480px) {
+  #app {
+    padding-bottom: 70px;
+  }
   form#entryForm {
     grid-template-columns: 1fr;
   }
@@ -169,4 +231,14 @@ ul#entries li .controls button:hover {
     justify-self: end;
     margin-top: 0.5rem;
   }
+
+  .bottom-nav {
+    height: 56px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Hide bottom nav on print */
+@media print {
+  .bottom-nav { display: none !important; }
 }
