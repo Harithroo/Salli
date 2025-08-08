@@ -24,7 +24,7 @@ export function initRender() {
         const i = +e.target.getAttribute('data-delete');
         entries.splice(i, 1);
         localStorage.setItem('entries', JSON.stringify(entries));
-        render();
+        initRender();
     });
 
     u('[data-edit]').on('click', e => {
