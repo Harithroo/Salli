@@ -1,6 +1,8 @@
 // navigation
 export function initNav() {
-    const pages = ['home', 'entries', 'entryform', 'stats', 'settings'];
+    const pages = Array.from(document.querySelectorAll('.nav-btn'))
+        .map(btn => btn.getAttribute('data-page'))
+        .filter(page => page);
     u('.nav-btn').on('click', e => {
         const page = e.target.closest('.nav-btn').getAttribute('data-page');
         pages.forEach(p => {
