@@ -1,0 +1,75 @@
+<div id="app">
+    <div id="page-home" class="page active">
+        <h1>Salli Tracker</h1>
+        <p>Welcome to your personal finance tracker. Use the navigation below to manage your entries, add new ones,
+            view
+            stats, and adjust settings.</p>
+    </div>
+    <div id="page-entries" class="page">
+        <h2>Entries</h2>
+        <ul id="entries"></ul>
+    </div>
+    <div id="page-entryform" class="page">
+        <h2>Add Entry</h2>
+        <form id="entryForm">
+            <label>Date & Time: <input type="datetime-local" id="datetime" required></label>
+            <label>Account:
+                <select id="account">
+                    <option value="Wallet">Wallet</option>
+                    <option value="Bank - Frimi">Bank - Frimi</option>
+                    <option value="Bank - NSB">Bank - NSB(Rajagiriya)</option>
+                    <option value="Bank - NSB">Bank - NSB(Kollupitiya)</option>
+                    <option value="Bank - Commercial">Bank - Commercial</option>
+                </select>
+            </label>
+            <label>Category:
+                <select id="category">
+                    <option value="Prior savings">Prior savings</option>
+                    <option value="Expenses">Expenses</option>
+                    <option value="Banking">Banking</option>
+                </select>
+            </label>
+            <label>Subcategory:
+                <input type="text" id="subcategory">
+            </label>
+            <label>Note:
+                <input type="text" id="note">
+            </label>
+            <label>Description:
+                <input type="text" id="description">
+            </label>
+            <label>Type:
+                <select id="type">
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                </select>
+            </label>
+            <label>Amount (LKR):
+                <input type="number" id="amount" step="0.01" required>
+            </label>
+            <button type="submit" id="submitBtn">Add</button>
+        </form>
+    </div>
+    <div id="page-stats" class="page">
+        <h2>Stats</h2>
+        <div id="statsContent">
+            <p>View your spending and income statistics here. (Feature coming soon!)</p>
+        </div>
+    </div>
+    <div id="page-settings" class="page">
+        <h2>Settings</h2>
+        <div id="settingsContent">
+            <p>Adjust your preferences and app settings here. (Feature coming soon!)</p>
+            <div class="actions">
+                <button id="backupBtn">Backup to Drive</button>
+                <span id="backupStatus"></span>
+                <button id="restoreBtn">Restore from Drive</button>
+                <span id="restoreStatus"></span>
+                <button id="exportCsvBtn">Export CSV</button>
+                <button id="exportTsvBtn">Export TSV</button>
+                <input type="file" id="importFile" accept=".csv,.tsv">
+            </div>
+        </div>
+    </div>
+    <?php include 'nav.php'; ?>
+</div>
