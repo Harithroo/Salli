@@ -1,5 +1,5 @@
 // Export
-function exportEntries(type = 'csv') {
+export function exportEntries(type = 'csv') {
     const entries = JSON.parse(localStorage.getItem('entries') || '[]');
     if (!entries.length) {
         alert('No entries to export.');

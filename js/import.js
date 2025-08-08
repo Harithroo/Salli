@@ -1,5 +1,5 @@
 // import
-function importEntries(file, type = 'csv') {
+export function importEntries(file, type = 'csv') {
     const reader = new FileReader();
     const delimiter = type === 'tsv' ? '\t' : ',';
 
@@ -21,12 +21,4 @@ function importEntries(file, type = 'csv') {
     };
 
     reader.readAsText(file);
-
-    u('#importFile').on('change', e => {
-        const file = e.target.files[0];
-        if (file) {
-            const isTSV = file.name.endsWith('.tsv');
-            importEntries(file, isTSV ? 'tsv' : 'csv');
-        }
-    });
 }
