@@ -1,9 +1,9 @@
 #statsContent {
-  padding: 1.5rem 1rem;
-  text-align: center;
-  color: #777;
-  background: #f7faff;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px 0 rgba(44,123,229,0.05);
-  font-size: 1.13rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    color: #777;
+    background: #f7faff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px 0 rgba(44, 123, 229, 0.05);
+    font-size: 1.13rem;
 }

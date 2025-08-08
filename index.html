@@ -2,126 +2,101 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="
-  script-src 'self' https://accounts.google.com https://apis.google.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval';
-">
-  <title>Salli Tracker</title>
-  <link rel="manifest" href="manifest.json">
-  <!-- <link rel="stylesheet" href="style.css"> -->
-  <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/home.css">
-  <link rel="stylesheet" href="css/entries.css">
-  <link rel="stylesheet" href="css/entryform.css">
-  <link rel="stylesheet" href="css/stats.css">
-  <link rel="stylesheet" href="css/settings.css">
-  <link rel="stylesheet" href="css/nav.css">
-  <script async defer src="https://accounts.google.com/gsi/client"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Security-Policy"
+        content="script-src 'self' https://accounts.google.com https://apis.google.com https://www.gstatic.com 'unsafe-inline' 'unsafe-eval';">
+    <title>Salli Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
+    <script src="libs/umbrella.min.js"></script>
 </head>
 
 <body>
-  <div id="app">
-    <div id="page-home" class="page active">
-      <h1>Salli Tracker</h1>
-      <p>Welcome to your personal finance tracker. Use the navigation below to manage your entries, add new ones, view
-        stats, and adjust settings.</p>
-    </div>
-    <div id="page-entries" class="page">
-      <h2>Entries</h2>
-      <ul id="entries"></ul>
-    </div>
-    <div id="page-entryform" class="page">
-      <h2>Add Entry</h2>
-      <form id="entryForm">
-        <label>Date & Time: <input type="datetime-local" id="datetime" required></label>
-        <label>Account:
-          <select id="account">
-            <option value="Wallet">Wallet</option>
-            <option value="Bank - Frimi">Bank - Frimi</option>
-            <option value="Bank - NSB">Bank - NSB(Rajagiriya)</option>
-            <option value="Bank - NSB">Bank - NSB(Kollupitiya)</option>
-            <option value="Bank - Commercial">Bank - Commercial</option>
-          </select>
-        </label>
-        <label>Category:
-          <select id="category">
-            <option value="Prior savings">Prior savings</option>
-            <option value="Expenses">Expenses</option>
-            <option value="Banking">Banking</option>
-          </select>
-        </label>
-        <label>Subcategory:
-          <input type="text" id="subcategory">
-        </label>
-        <label>Note:
-          <input type="text" id="note">
-        </label>
-        <label>Description:
-          <input type="text" id="description">
-        </label>
-        <label>Type:
-          <select id="type">
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-        </label>
-        <label>Amount (LKR):
-          <input type="number" id="amount" step="0.01" required>
-        </label>
-        <button type="submit" id="submitBtn">Add</button>
-      </form>
-    </div>
-    <div id="page-stats" class="page">
-      <h2>Stats</h2>
-      <div id="statsContent">
-        <p>View your spending and income statistics here. (Feature coming soon!)</p>
-      </div>
-    </div>
-    <div id="page-settings" class="page">
-      <h2>Settings</h2>
-      <div id="settingsContent">
-        <p>Adjust your preferences and app settings here. (Feature coming soon!)</p>
-        <div class="actions">
-          <button id="backupBtn">Backup to Drive</button>
-          <span id="backupStatus"></span>
-          <button id="restoreBtn">Restore from Drive</button>
-          <span id="restoreStatus"></span>
-          <button onclick="exportEntries('csv')">Export CSV</button>
-          <button onclick="exportEntries('tsv')">Export TSV</button>
-          <input type="file" id="importFile" accept=".csv,.tsv">
+    <div id="app">
+        <div id="page-home" class="page active">
+            <h1>Salli Tracker</h1>
+            <p>Welcome to your personal finance tracker. Use the navigation below to manage your entries, add new ones,
+                view
+                stats, and adjust settings.</p>
         </div>
-      </div>
+        <div id="page-entries" class="page">
+            <h2>Entries</h2>
+            <ul id="entries"></ul>
+        </div>
+        <div id="page-entryform" class="page">
+            <h2>Add Entry</h2>
+            <form id="entryForm">
+                <label>Date & Time: <input type="datetime-local" id="datetime" required></label>
+                <label>Account:
+                    <select id="account">
+                        <option value="Wallet">Wallet</option>
+                        <option value="Bank - Frimi">Bank - Frimi</option>
+                        <option value="Bank - NSB">Bank - NSB(Rajagiriya)</option>
+                        <option value="Bank - NSB">Bank - NSB(Kollupitiya)</option>
+                        <option value="Bank - Commercial">Bank - Commercial</option>
+                    </select>
+                </label>
+                <label>Category:
+                    <select id="category">
+                        <option value="Prior savings">Prior savings</option>
+                        <option value="Expenses">Expenses</option>
+                        <option value="Banking">Banking</option>
+                    </select>
+                </label>
+                <label>Subcategory:
+                    <input type="text" id="subcategory">
+                </label>
+                <label>Note:
+                    <input type="text" id="note">
+                </label>
+                <label>Description:
+                    <input type="text" id="description">
+                </label>
+                <label>Type:
+                    <select id="type">
+                        <option value="Income">Income</option>
+                        <option value="Expense">Expense</option>
+                    </select>
+                </label>
+                <label>Amount (LKR):
+                    <input type="number" id="amount" step="0.01" required>
+                </label>
+                <button type="submit" id="submitBtn">Add</button>
+            </form>
+        </div>
+        <div id="page-stats" class="page">
+            <h2>Stats</h2>
+            <div id="statsContent">
+                <p>View your spending and income statistics here. (Feature coming soon!)</p>
+            </div>
+        </div>
+        <div id="page-settings" class="page">
+            <h2>Settings</h2>
+            <div id="settingsContent">
+                <p>Adjust your preferences and app settings here. (Feature coming soon!)</p>
+                <div class="actions">
+                    <button id="backupBtn">Backup to Drive</button>
+                    <span id="backupStatus"></span>
+                    <button id="restoreBtn">Restore from Drive</button>
+                    <span id="restoreStatus"></span>
+                    <button onclick="exportEntries('csv')">Export CSV</button>
+                    <button onclick="exportEntries('tsv')">Export TSV</button>
+                    <input type="file" id="importFile" accept=".csv,.tsv">
+                </div>
+            </div>
+        </div>
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-page="home"><span>🏠</span><span>Home</span></button>
+            <button class="nav-btn" data-page="entries"><span>📋</span><span>Entries</span></button>
+            <button class="nav-btn" data-page="entryform"><span>➕</span><span>Add</span></button>
+            <button class="nav-btn" data-page="stats"><span>📊</span><span>Stats</span></button>
+            <button class="nav-btn" data-page="settings"><span>⚙️</span><span>Settings</span></button>
+        </nav>
     </div>
-    <nav class="bottom-nav">
-      <button class="nav-btn" data-page="home"><span>🏠</span><span>Home</span></button>
-      <button class="nav-btn" data-page="entries"><span>📋</span><span>Entries</span></button>
-      <button class="nav-btn" data-page="entryform"><span>➕</span><span>Add</span></button>
-      <button class="nav-btn" data-page="stats"><span>📊</span><span>Stats</span></button>
-      <button class="nav-btn" data-page="settings"><span>⚙️</span><span>Settings</span></button>
-    </nav>
-  </div>
-  <script src="libs/umbrella.min.js"></script>
-  <script src="js/entries.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/drive.js"></script>
-  <script src="js/import.js"></script>
-  <script src="js/export.js"></script>
-  <script src="app.js"></script>
-  <script>
-    // Navigation logic
-    const pages = ['home', 'entries', 'entryform', 'stats', 'settings'];
-    u('.nav-btn').on('click', e => {
-      const page = e.target.closest('.nav-btn').getAttribute('data-page');
-      pages.forEach(p => {
-        u(`#page-${p}`).removeClass('active');
-        u(`.nav-btn[data-page="${p}"]`).removeClass('active');
-      });
-      u(`#page-${page}`).addClass('active');
-      u(`.nav-btn[data-page="${page}"]`).addClass('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  </script>
+    <script src="app.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>

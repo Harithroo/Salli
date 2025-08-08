@@ -1,4 +1,4 @@
-// 5. import
+// import
 function importEntries(file, type = 'csv') {
     const reader = new FileReader();
     const delimiter = type === 'tsv' ? '\t' : ',';
