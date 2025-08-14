@@ -1,10 +1,9 @@
 // --------------- DRIVE FUNCTIONS --------------
+import { render } from './render.js';
 
-u('#backupBtn').on('click', backupToDrive);
+const entriesKey = 'entries';
 
-u('#restoreBtn').on('click', restoreFromDrive);
-
-async function backupToDrive() {
+export async function backupToDrive() {
     const statusEl = u('#backupStatus').first();
     statusEl.textContent = 'Backing up…';
     await ensureSignedIn();
@@ -14,29 +13,39 @@ async function backupToDrive() {
 
     const entries = JSON.parse(localStorage.getItem(entriesKey) || '[]');
     const fileContent = JSON.stringify(entries, null, 2);
-    const metadata = {
+    // Metadata for file creation
+    const createMetadata = {
         name: 'salli-backup.json',
         mimeType: 'application/json',
         parents: [folderId]
     };
+    // Metadata for file update (no parents field)
+    const updateMetadata = {
+        name: 'salli-backup.json',
+        mimeType: 'application/json'
+    };
 
-    // Create multipart request body
-    const boundary = '-------314159265358979323846';
-    const delimiter = `\r\n--${boundary}\r\n`;
-    const closeDelim = `\r\n--${boundary}--`;
-    const multipartRequestBody =
-        delimiter +
-        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
-        JSON.stringify(metadata) +
-        delimiter +
-        'Content-Type: application/json\r\n\r\n' +
-        fileContent +
-        closeDelim;
+    // Create multipart request body helper
+    function makeMultipartBody(metadataObj) {
+        const boundary = '-------314159265358979323846';
+        const delimiter = `\r\n--${boundary}\r\n`;
+        const closeDelim = `\r\n--${boundary}--`;
+        return (
+            delimiter +
+            'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+            JSON.stringify(metadataObj) +
+            delimiter +
+            'Content-Type: application/json\r\n\r\n' +
+            fileContent +
+            closeDelim
+        );
+    }
 
     try {
         let resp;
+        const boundary = '-------314159265358979323846';
         if (fileId) {
-            // Update existing file
+            // Update existing file (no parents field)
             resp = await fetch(
                 `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`,
                 {
@@ -45,11 +54,11 @@ async function backupToDrive() {
                         'Authorization': 'Bearer ' + accessToken,
                         'Content-Type': 'multipart/related; boundary=' + boundary,
                     },
-                    body: multipartRequestBody,
+                    body: makeMultipartBody(updateMetadata),
                 }
             );
         } else {
-            // Create new file
+            // Create new file (with parents field)
             resp = await fetch(
                 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
                 {
@@ -58,7 +67,7 @@ async function backupToDrive() {
                         'Authorization': 'Bearer ' + accessToken,
                         'Content-Type': 'multipart/related; boundary=' + boundary,
                     },
-                    body: multipartRequestBody,
+                    body: makeMultipartBody(createMetadata),
                 }
             );
         }
@@ -70,7 +79,7 @@ async function backupToDrive() {
     }
 }
 
-async function restoreFromDrive() {
+export async function restoreFromDrive() {
     const statusEl = u('#restoreStatus').first();
     statusEl.textContent = 'Restoring…';
     try {
@@ -102,17 +111,18 @@ async function restoreFromDrive() {
         statusEl.textContent = '✅ Restore successful';
     } catch (err) {
         console.error(err);
-        statusEl.textContent = err.message.includes('No backup')
+        statusEl.textContent = err.message && err.message.includes('No backup')
             ? '❌ No backup file found. Please backup first.'
             : '❌ Restore failed';
     }
 }
 
+
 // --- GOOGLE IDENTITY SERVICES (GIS) ---
 let accessToken = null;
 let tokenClient = null;
 
-window.onload = () => {
+export function initDriveAuth(CLIENT_ID, SCOPES) {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
@@ -120,8 +130,7 @@ window.onload = () => {
             accessToken = tokenResponse.access_token;
         },
     });
-    render();
-};
+}
 
 async function ensureSignedIn() {
     if (!accessToken) {

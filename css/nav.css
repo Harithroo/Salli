@@ -6,10 +6,11 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(90deg, #fff 80%, #e3eaff 100%);
-    border-top: 1.5px solid #b3c6f7;
-    box-shadow: 0 -2px 12px 0 rgba(44, 123, 229, 0.07);
+    background: linear-gradient(90deg, var(--color-bg-page) 80%, var(--color-scrollbar) 100%);
+    border-top: 1.5px solid var(--color-primary-light);
+    box-shadow: 0 -2px 12px 0 var(--color-shadow);
     z-index: 100;
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
 .nav-btn {
@@ -20,7 +21,7 @@
     font-size: 0.93rem;
     background: none;
     border: none;
-    color: #888;
+    color: var(--color-text);
     font-weight: 600;
     padding: 0.3rem 0;
     border-radius: 8px;
@@ -28,11 +29,11 @@
 }
 
 .nav-btn.active {
-    color: #2c7be5;
-    background: #e3eaff;
-    box-shadow: 0 2px 8px 0 rgba(44, 123, 229, 0.07);
+    color: var(--color-primary);
+    background: var(--color-scrollbar);
+    box-shadow: 0 2px 8px 0 var(--color-shadow);
 }
 
 .nav-btn:active {
-    background: #d0e2ff;
+    background: var(--color-primary-light);
 }
