@@ -1,5 +1,15 @@
 // Load existing entries from localStorage
-export function initRender() {
+let editingIndex = null;
+
+export function getEditingIndex() {
+    return editingIndex;
+}
+
+export function setEditingIndex(val) {
+    editingIndex = val;
+}
+
+export function render() {
     const entries = JSON.parse(localStorage.getItem('entries') || '[]');
     u('#entries').html('');
 
@@ -24,7 +34,7 @@ export function initRender() {
         const i = +e.target.getAttribute('data-delete');
         entries.splice(i, 1);
         localStorage.setItem('entries', JSON.stringify(entries));
-        initRender();
+        render();
     });
 
     u('[data-edit]').on('click', e => {
@@ -33,11 +43,12 @@ export function initRender() {
     });
 }
 
-
-let editingIndex = null;
+export function initRender() {
+    render();
+}
 
 function fillFormForEdit(entry, index) {
-    editingIndex = index;
+    setEditingIndex(index);
 
     u('#datetime').first().value = entry["Date and time"];
     u('#account').first().value = entry["Account"];

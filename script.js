@@ -1,9 +1,15 @@
 import { loadAllPartials } from './js/partials-loader.js';
+import { initTheme } from './js/theme-toggle.js';
 import { initRender } from './js/render.js';
 import { initNav } from './js/nav.js';
 import { initEntries } from './js/entries.js';
 import { exportEntries } from './js/export.js';
 import { importEntries } from './js/import.js';
+import { initDriveAuth, backupToDrive, restoreFromDrive } from './js/drive.js';
+
+const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const DRIVE_KEY = 'budgetDriveFileId';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadAllPartials([
@@ -15,8 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'nav-container', file: 'partials/nav.html' }
     ], () => {
         initRender();
+        initTheme();
         initNav();
         initEntries();
+        initDriveAuth(CLIENT_ID, SCOPES);
         u('#exportCsvBtn').on('click', () => exportEntries('csv'));
         u('#exportTsvBtn').on('click', () => exportEntries('tsv'));
         u('#importFile').on('change', e => {
@@ -26,5 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 importEntries(file, isTSV ? 'tsv' : 'csv');
             }
         });
+        u('#backupBtn').on('click', () => backupToDrive());
+        u('#restoreBtn').on('click', () => restoreFromDrive());
     });
 });

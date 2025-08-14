@@ -5,21 +5,21 @@
 }
 
 #entries li {
-    background: #f7faff;
+    background: var(--color-bg-page);
     margin-bottom: 1rem;
     padding: 1.1rem 1rem 1rem 1rem;
     border-radius: 14px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    box-shadow: 0 2px 8px 0 rgba(44, 123, 229, 0.07);
-    border: 1px solid #e3eaff;
-    transition: box-shadow 0.2s, border 0.2s;
+    box-shadow: 0 2px 8px 0 var(--color-shadow);
+    border: 1px solid var(--color-scrollbar);
+    transition: box-shadow 0.2s, border 0.2s, background 0.3s;
 }
 
 #entries li:hover {
-    box-shadow: 0 4px 16px 0 rgba(44, 123, 229, 0.13);
-    border-color: #b3c6f7;
+    box-shadow: 0 4px 16px 0 var(--color-shadow-hover);
+    border-color: var(--color-primary-light);
 }
 
 #entries li .info span {
@@ -30,14 +30,14 @@
 
 #entries li .controls button {
     margin-left: 0.5rem;
-    background: #fff;
-    color: #2c7be5;
-    border: 1px solid #2c7be5;
+    background: var(--color-bg-page);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
     box-shadow: none;
     transition: background 0.2s, color 0.2s;
 }
 
 #entries li .controls button:hover {
-    background: #2c7be5;
+    background: var(--color-primary);
     color: #fff;
 }

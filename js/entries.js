@@ -1,4 +1,6 @@
 // Handle new entries/updates/deletes
+import { render, setEditingIndex, getEditingIndex } from './render.js';
+
 export function initEntries() {
     u('#entryForm').on('submit', ev => {
         ev.preventDefault();
@@ -16,9 +18,9 @@ export function initEntries() {
             "Amount": parseFloat(u('#amount').first().value)
         };
 
-        if (editingIndex !== null) {
-            all[editingIndex] = entry;
-            editingIndex = null;
+        if (getEditingIndex() !== null) {
+            all[getEditingIndex()] = entry;
+            setEditingIndex(null);
             u('#submitBtn').text('Add');
             alert('Entry updated!');
         } else {
