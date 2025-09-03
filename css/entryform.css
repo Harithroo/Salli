@@ -4,8 +4,8 @@
     background: var(--color-bg-page);
     padding: 1.5rem 1rem;
     border-radius: 14px;
-    box-shadow: 0 2px 8px 0 var(--color-shadow);
-    border: 1px solid var(--color-scrollbar);
+    box-shadow: 0 2px 8px 0 var(--color-bg-invert);
+    border: 1px solid var(--color-border);
     transition: background 0.3s, box-shadow 0.3s;
 }
 
@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     font-weight: 500;
-    color: var(--color-primary);
+    color: var(--color-text);
     gap: 0.3rem;
 }
 
@@ -23,7 +23,7 @@
 }
 
 #submitBtn {
-    width: fit-content;
+    width: 100%;
     align-self: end;
     margin-top: 0.5rem;
     padding: 0.7rem 1.5rem;

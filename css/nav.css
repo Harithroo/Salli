@@ -1,3 +1,4 @@
+/* Bottom Navigation Styles */
 .bottom-nav {
     display: flex;
     justify-content: space-around;
@@ -6,13 +7,14 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(90deg, var(--color-bg-page) 80%, var(--color-scrollbar) 100%);
+    background: var(--color-bg);
     border-top: 1.5px solid var(--color-primary-light);
     box-shadow: 0 -2px 12px 0 var(--color-shadow);
     z-index: 100;
     transition: background 0.3s, box-shadow 0.3s;
 }
 
+/* Navigation Button Styles */
 .nav-btn {
     flex: 1;
     display: flex;
@@ -26,6 +28,22 @@
     padding: 0.3rem 0;
     border-radius: 8px;
     transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.nav-btn.add-btn {
+    position: absolute;
+    top: -40px;
+    width: 90px;
+    max-width: 25%;
+}
+
+.nav-btn.add-btn img {
+    width: 100%;
+}
+
+.add-btn-placeholder {
+    visibility: hidden;
 }
 
 .nav-btn.active {
