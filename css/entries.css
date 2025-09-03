@@ -5,7 +5,7 @@
 }
 
 #entries li {
-    background: var(--color-bg-page);
+    background: var(--color-card-bg);
     margin-bottom: 1rem;
     padding: 1.1rem 1rem 1rem 1rem;
     border-radius: 14px;
@@ -28,7 +28,7 @@
     margin-bottom: 0.2rem;
 }
 
-#entries li .controls button {
+#entries li .controls .button.primary {
     margin-left: 0.5rem;
     background: var(--color-bg-page);
     color: var(--color-primary);
@@ -37,7 +37,7 @@
     transition: background 0.2s, color 0.2s;
 }
 
-#entries li .controls button:hover {
+#entries li .controls .button.primary:hover {
     background: var(--color-primary);
     color: #fff;
 }

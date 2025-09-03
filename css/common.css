@@ -1,32 +1,29 @@
-
 :root {
-    --color-bg: #f9f9f9;
-    --color-bg-gradient: linear-gradient(135deg, #f9f9f9 60%, #e3eaff 100%);
-    --color-bg-page: #fff;
-    --color-text: #222;
-    --color-primary: #2c7be5;
-    --color-primary-dark: #1a68d1;
-    --color-primary-light: #5a8dee;
-    --color-border: #c7d0e1;
-    --color-shadow: rgba(44, 123, 229, 0.07);
-    --color-shadow-hover: rgba(44, 123, 229, 0.13);
-    --color-scrollbar: #e3eaff;
-    --color-scrollbar-thumb: #c7d0e1;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-bg: #FFFFFF;
+    --color-bg-invert: #000000;
+    --color-bg-gradient: linear-gradient(183.33deg, #FFFFFF 9.56%, #4E4E4E00 125.54%);
+    --color-card-bg: #FFFFFF;
+    --color-border: #4E4E4E;
+    --color-text: #4E4E4E;
+    --color-primary: #5595FF;
 }
 
 [data-theme="dark"] {
-    --color-bg: #181c24;
-    --color-bg-gradient: linear-gradient(135deg, #232a36 60%, #1a2230 100%);
-    --color-bg-page: #232a36;
-    --color-text: #e3eaff;
-    --color-primary: #5a8dee;
-    --color-primary-dark: #2c7be5;
-    --color-primary-light: #7eaaff;
-    --color-border: #3a4660;
-    --color-shadow: rgba(44, 123, 229, 0.13);
-    --color-shadow-hover: rgba(44, 123, 229, 0.22);
-    --color-scrollbar: #232a36;
-    --color-scrollbar-thumb: #3a4660;
+    --color-black: #000000;
+    --color-white: #FFFFFF;
+    --color-bg: #000000;
+    --color-bg-invert: #FFFFFF;
+    --color-bg-gradient: linear-gradient(183.33deg, #000000 9.56%, #C6C6C600 125.54%);
+    --color-card-bg: #101820;
+    --color-border: #C6C6C6;
+    --color-text: #C6C6C6;
+    --color-primary: #FEE715;
+}
+
+html {
+    background: var(--color-bg-invert);
 }
 
 body {
@@ -41,12 +38,9 @@ body {
 
 .page {
     display: none;
-    padding: 2rem 1rem 4rem 1rem;
+    padding: 2rem 1rem 7rem 1rem;
     max-width: 600px;
     margin: 0 auto;
-    background: var(--color-bg-page);
-    border-radius: 18px;
-    box-shadow: 0 2px 16px 0 var(--color-shadow);
     transition: background 0.3s, box-shadow 0.3s;
 }
 
@@ -67,15 +61,26 @@ body {
     }
 }
 
+/* Header Title Styles */
+.header-title {
+    font-size: 2.1rem;
+    text-align: center;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-top: 0.7rem;
+    margin-bottom: 0.7rem;
+}
+
+/* Button Styles */
 input,
 select,
-button {
+.button.primary {
     font-size: 1rem;
     padding: 0.6rem 0.9rem;
     border-radius: 8px;
     border: 1px solid var(--color-border);
     transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
-    background: var(--color-bg-page);
+    background: var(--color-card-bg);
     color: var(--color-text);
 }
 
@@ -83,37 +88,29 @@ input:focus,
 select:focus {
     border-color: var(--color-primary);
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-scrollbar);
+    box-shadow: 0 0 0 2px var(--color-bg-invert);
 }
 
-button {
-    background: linear-gradient(90deg, var(--color-primary) 60%, var(--color-primary-light) 100%);
-    color: #fff;
-    border: none;
+.button.primary {
+    width: 100%;
+    background: var(--color-primary);
+    color:  var(--color-bg);
+    border: 1px solid var(--color-primary);
     cursor: pointer;
     font-weight: 600;
-    box-shadow: 0 2px 8px 0 var(--color-shadow);
+    box-shadow: 0 2px 8px 0 var(--color-bg-invert);
     transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
 }
 
-button:hover,
-button:focus {
-    background: linear-gradient(90deg, var(--color-primary-dark) 60%, #3a6fc1 100%);
-    box-shadow: 0 4px 16px 0 var(--color-shadow-hover);
+.button.primary:hover,
+.button.primary:focus {
+    border: 1px solid var(--color-bg-invert);
+    box-shadow: 0 4px 16px 0 var(--color-bg-invert);
     transform: translateY(-2px) scale(1.03);
 }
 
-button:active {
-    background: var(--color-primary-dark);
+.button.primary:active {
+    border: 1px solid var(--color-bg-invert);
+    box-shadow: 0 4px 16px 0 var(--color-bg-invert);
     transform: scale(0.98);
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-    background: var(--color-scrollbar);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--color-scrollbar-thumb);
-    border-radius: 8px;
 }
