@@ -2,9 +2,6 @@
     padding: 1.5rem 1rem;
     text-align: center;
     color: var(--color-text);
-    background: var(--color-bg-page);
-    border-radius: 10px;
-    box-shadow: 0 1px 4px 0 var(--color-shadow);
     font-size: 1.13rem;
     transition: background 0.3s, color 0.3s;
 }

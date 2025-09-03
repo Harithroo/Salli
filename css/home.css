@@ -1,12 +1,46 @@
-#page-home p {
-    text-align: center;
-    max-width: 600px;
+.account-balance-container {
+    display: flex;
+    flex-direction: column;
     margin: auto;
     color: var(--color-text);
     font-size: 1.13rem;
-    background: var(--color-bg-page);
-    padding: 1.1rem 0.7rem;
-    border-radius: 10px;
-    box-shadow: 0 1px 4px 0 var(--color-shadow);
-    transition: background 0.3s, color 0.3s;
+}
+
+.account-balance-text {
+    width: auto;
+    margin: auto;
+}
+
+.account-balance-value-container {
+    width: auto;
+    margin: auto;
+}
+
+.income-expense-container {
+    display: flex;
+}
+
+.income-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.expense-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.accounts-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.account-item {
+    width: calc(49% - 50px);
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 20px;
 }
