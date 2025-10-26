@@ -3,6 +3,8 @@ import { render } from './render.js';
 
 const entriesKey = 'entries';
 
+import { getData, saveData } from './storage.js';
+
 export async function backupToDrive() {
     const statusEl = u('#backupStatus').first();
     statusEl.textContent = 'Backing up…';
@@ -11,8 +13,8 @@ export async function backupToDrive() {
     const folderId = await getOrCreateBackupFolder();
     const fileId = await findBackupFile(folderId);
 
-    const entries = JSON.parse(localStorage.getItem(entriesKey) || '[]');
-    const fileContent = JSON.stringify(entries, null, 2);
+    const data = getData();
+    const fileContent = JSON.stringify(data, null, 2);
     // Metadata for file creation
     const createMetadata = {
         name: 'salli-backup.json',
@@ -72,6 +74,7 @@ export async function backupToDrive() {
             );
         }
         if (!resp.ok) throw new Error(await resp.text());
+        setSetting('lastBackup', new Date().toISOString());
         statusEl.textContent = '✅ Backup successful';
     } catch (err) {
         console.error(err);
@@ -106,7 +109,8 @@ export async function restoreFromDrive() {
         const data = await resp.json();
 
         // 5. Save locally & re-render
-        localStorage.setItem(entriesKey, JSON.stringify(data));
+        saveData(data);
+        setSetting('lastRestore', new Date().toISOString());
         render();
         statusEl.textContent = '✅ Restore successful';
     } catch (err) {

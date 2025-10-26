@@ -1,10 +1,10 @@
 // Handle new entries/updates/deletes
-import { render, setEditingIndex, getEditingIndex } from './render.js';
+import { render, setEditingIndex, getEditingIndex, getEditingAccount } from './render.js';
+import { addEntry, updateEntry } from './storage.js';
 
 export function initEntries() {
     u('#entryForm').on('submit', ev => {
         ev.preventDefault();
-        const all = JSON.parse(localStorage.getItem('entries') || '[]');
 
         const entry = {
             "Date and time": u('#datetime').first().value,
@@ -19,16 +19,15 @@ export function initEntries() {
         };
 
         if (getEditingIndex() !== null) {
-            all[getEditingIndex()] = entry;
+            updateEntry(getEditingIndex(), entry, getEditingAccount());
             setEditingIndex(null);
             u('#submitBtn').text('Add');
             alert('Entry updated!');
         } else {
+            addEntry(entry);
             alert('Entry added!');
-            all.push(entry);
         }
 
-        localStorage.setItem('entries', JSON.stringify(all));
         render();
         ev.target.reset();
     });

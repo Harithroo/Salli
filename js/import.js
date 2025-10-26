@@ -1,4 +1,6 @@
 // import
+import { getData, saveData } from './storage.js';
+
 export function importEntries(file, type = 'csv') {
     const reader = new FileReader();
     const delimiter = type === 'tsv' ? '\t' : ',';
@@ -15,8 +17,18 @@ export function importEntries(file, type = 'csv') {
             return entry;
         });
 
-        const existing = JSON.parse(localStorage.getItem('entries') || '[]');
-        localStorage.setItem('entries', JSON.stringify([...existing, ...newEntries]));
+        const data = getData();
+        
+        // Group new entries by account
+        newEntries.forEach(entry => {
+            const account = entry.Account;
+            if (!data.entries.accounts[account]) {
+                data.entries.accounts[account] = [];
+            }
+            data.entries.accounts[account].push(entry);
+        });
+
+        saveData(data);
         alert('Entries imported!');
     };
 

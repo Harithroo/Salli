@@ -6,12 +6,16 @@ import { initEntries } from './js/entries.js';
 import { exportEntries } from './js/export.js';
 import { importEntries } from './js/import.js';
 import { initDriveAuth, backupToDrive, restoreFromDrive } from './js/drive.js';
+import { initStorage } from './js/storage.js';
 
 const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const DRIVE_KEY = 'budgetDriveFileId';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize storage first
+    initStorage();
+    
     loadAllPartials([
         { id: 'home-container', file: 'partials/home.html' },
         { id: 'entries-container', file: 'partials/entries.html' },

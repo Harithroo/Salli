@@ -1,11 +1,13 @@
 // --- Theme Switcher ---
+import { getSetting, setSetting } from './storage.js';
+
 export function initTheme() {
     const themeToggle = document.getElementById('theme-toggle');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = getSetting('theme');
 
     if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('change', toggleTheme);
         // Set initial theme
         if (savedTheme) {
             setTheme(savedTheme, themeToggle);
@@ -18,19 +20,18 @@ export function initTheme() {
 function setTheme(theme, themeToggle) {
     if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
+        themeToggle.checked = true;
         themeToggle.title = 'Switch to light mode';
     } else {
         document.documentElement.removeAttribute('data-theme');
-        themeToggle.textContent = '🌙';
+        themeToggle.checked = false;
         themeToggle.title = 'Switch to dark mode';
     }
 }
 
 function toggleTheme() {
     const themeToggle = document.getElementById('theme-toggle');
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const newTheme = isDark ? 'light' : 'dark';
+    const newTheme = themeToggle.checked ? 'dark' : 'light';
     setTheme(newTheme, themeToggle);
-    localStorage.setItem('theme', newTheme);
+    setSetting('theme', newTheme);
 }

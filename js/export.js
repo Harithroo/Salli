@@ -1,6 +1,8 @@
 // Export
+import { getAllEntries } from './storage.js';
+
 export function exportEntries(type = 'csv') {
-    const entries = JSON.parse(localStorage.getItem('entries') || '[]');
+    const entries = getAllEntries();
     if (!entries.length) {
         alert('No entries to export.');
         return;

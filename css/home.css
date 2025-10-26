@@ -1,4 +1,4 @@
-.account-balance-container {
+#page-home .account-balance-container {
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -6,39 +6,39 @@
     font-size: 1.13rem;
 }
 
-.account-balance-text {
+#page-home .account-balance-text {
     width: auto;
     margin: auto;
 }
 
-.account-balance-value-container {
+#page-home .account-balance-value-container {
     width: auto;
     margin: auto;
 }
 
-.income-expense-container {
+#page-home .income-expense-container {
     display: flex;
 }
 
-.income-container {
+#page-home .income-container {
     flex: 1;
     display: flex;
     justify-content: center;
 }
 
-.expense-container {
+#page-home .expense-container {
     flex: 1;
     display: flex;
     justify-content: center;
 }
 
-.accounts-list {
+#page-home .accounts-list {
     display: flex;
     flex-wrap: wrap;
     gap: 9px;
 }
 
-.account-item {
+#page-home .account-item {
     width: calc(49% - 50px);
     border: 1px solid;
     border-radius: 8px;
