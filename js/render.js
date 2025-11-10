@@ -71,8 +71,9 @@ export function initRender() {
     u('#lastRestoreDate').text(getSetting('lastRestore') || 'Never');
 }
 
-function fillFormForEdit(entry, index) {
+function fillFormForEdit(entry, index, account) {
     setEditingIndex(index);
+    setEditingAccount(account);
 
     u('#datetime').first().value = entry["Date and time"];
     u('#account').first().value = entry["Account"];

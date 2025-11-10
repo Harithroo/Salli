@@ -19,45 +19,12 @@ export function initStorage() {
     if (!localStorage.getItem(STORAGE_KEY)) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(getDefaultData()));
     }
-
-    // Migrate old data if exists
-    migrateOldData();
 }
 
-function migrateOldData() {
-    const oldEntries = localStorage.getItem('entries');
-    const oldTheme = localStorage.getItem('theme');
-    const oldLastBackup = localStorage.getItem('lastBackupDate');
-    const oldLastRestore = localStorage.getItem('lastRestoreDate');
-
-    if (oldEntries || oldTheme || oldLastBackup || oldLastRestore) {
-        const data = getData();
-
-        if (oldEntries) {
-            const entries = JSON.parse(oldEntries);
-            // Group entries by account
-            entries.forEach(entry => {
-                const account = entry.Account;
-                if (!data.entries.accounts[account]) {
-                    data.entries.accounts[account] = [];
-                }
-                data.entries.accounts[account].push(entry);
-            });
-        }
-
-        if (oldTheme) data.settings.theme = oldTheme;
-        if (oldLastBackup) data.settings.lastBackup = oldLastBackup;
-        if (oldLastRestore) data.settings.lastRestore = oldLastRestore;
-
-        saveData(data);
-
-        // Clean up old storage
-        localStorage.removeItem('entries');
-        localStorage.removeItem('theme');
-        localStorage.removeItem('lastBackupDate');
-        localStorage.removeItem('lastRestoreDate');
-    }
-}
+// export function clearStorage() {
+//     localStorage.removeItem(STORAGE_KEY);
+//     initStorage();
+// }
 
 export function getData() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData();
@@ -91,19 +58,16 @@ export function addEntry(entry) {
     saveData(data);
 }
 
-export function updateEntry(index, entry, oldAccount) {
+export function updateEntry(index, entry, account) {
     const data = getData();
     
-    // Remove from old account
-    if (oldAccount) {
-        const oldEntries = data.entries.accounts[oldAccount];
-        oldEntries.splice(index, 1);
-        if (oldEntries.length === 0) {
-            delete data.entries.accounts[oldAccount];
-        }
+    // Remove the entry from its current account
+    data.entries.accounts[account].splice(index, 1);
+    if (data.entries.accounts[account].length === 0) {
+        delete data.entries.accounts[account];
     }
 
-    // Add to new/same account
+    // Add the entry to its new (or same) account
     if (!data.entries.accounts[entry.Account]) {
         data.entries.accounts[entry.Account] = [];
     }

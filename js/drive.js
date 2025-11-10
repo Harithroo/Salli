@@ -1,9 +1,6 @@
 // --------------- DRIVE FUNCTIONS --------------
 import { render } from './render.js';
-
-const entriesKey = 'entries';
-
-import { getData, saveData } from './storage.js';
+import { getData, saveData, setSetting } from './storage.js';
 
 export async function backupToDrive() {
     const statusEl = u('#backupStatus').first();
