@@ -23,30 +23,46 @@ export function setEditingAccount(val) {
 export function render() {
     u('#entries').html('');
     const accounts = getAccounts();
-
+    
+    // Get all entries and sort by date/time
+    let allEntries = [];
     accounts.forEach(account => {
         const entries = getEntriesByAccount(account);
-        
-        // Add account header
-        const header = document.createElement('h3');
-        header.textContent = account;
-        u('#entries').append(header);
-
-        entries.forEach((e, i) => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-            <div class="info">
-                <span>${e["Date and time"]}</span>
-                <span>${e["Account"]} • ${e["Income/Expense"]}</span>
-                <span>${e["Description"]}: Rs${parseFloat(e["Amount"]).toFixed(2)}</span>
-            </div>
-            <div class="controls">
-                <button data-edit="${i}" data-account="${account}">✏️</button>
-                <button data-delete="${i}" data-account="${account}">🗑️</button>
-            </div>
-            `;
-            u('#entries').append(li);
+        entries.forEach((entry, index) => {
+            allEntries.push({
+                entry: entry,
+                account: account,
+                index: index
+            });
         });
+    });
+    
+    // Sort by date and time (descending - newest first)
+    allEntries.sort((a, b) => {
+        const dateA = new Date(a.entry["Date and time"]);
+        const dateB = new Date(b.entry["Date and time"]);
+        return dateB - dateA;
+    });
+
+    // Render sorted entries
+    allEntries.forEach((item, displayIndex) => {
+        const e = item.entry;
+        const account = item.account;
+        const i = item.index;
+        
+        const li = document.createElement('li');
+        li.innerHTML = `
+        <div class="info">
+            <span>${e["Date and time"]}</span>
+            <span>${e["Account"]} • ${e["Income/Expense"]}</span>
+            <span>${e["Description"]}: Rs${parseFloat(e["Amount"]).toFixed(2)}</span>
+        </div>
+        <div class="controls">
+            <button data-edit="${i}" data-account="${account}">✏️</button>
+            <button data-delete="${i}" data-account="${account}">🗑️</button>
+        </div>
+        `;
+        u('#entries').append(li);
     });
 
     // Attach handlers
