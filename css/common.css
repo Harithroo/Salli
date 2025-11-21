@@ -9,6 +9,16 @@
     --color-text: #4E4E4E;
     --color-shadow: #5595FF;
     --color-primary: #5595FF;
+    --nav-icon-home: url("../assets/icons/nav/home.svg");
+    --nav-icon-home-active: url("../assets/icons/nav/home-light-active.svg");
+    --nav-icon-entries: url("../assets/icons/nav/entries.svg");
+    --nav-icon-entries-active: url("../assets/icons/nav/entries-light-active.svg");
+    --nav-icon-add: url("../assets/icons/nav/add-light-active.svg");
+    --nav-icon-add-active: url("../assets/icons/nav/add-light-active.svg");
+    --nav-icon-stats: url("../assets/icons/nav/stats.svg");
+    --nav-icon-stats-active: url("../assets/icons/nav/stats-light-active.svg");
+    --nav-icon-settings: url("../assets/icons/nav/settings.svg");
+    --nav-icon-settings-active: url("../assets/icons/nav/settings-light-active.svg");
 }
 
 [data-theme="dark"] {
@@ -22,6 +32,16 @@
     --color-text: #C6C6C6;
     --color-shadow: #FAC638;
     --color-primary: #FAC638;
+    --nav-icon-home: url("../assets/icons/nav/home.svg");
+    --nav-icon-home-active: url("../assets/icons/nav/home-dark-active.svg");
+    --nav-icon-entries: url("../assets/icons/nav/entries.svg");
+    --nav-icon-entries-active: url("../assets/icons/nav/entries-dark-active.svg");
+    --nav-icon-add: url("../assets/icons/nav/add-dark-active.svg");
+    --nav-icon-add-active: url("../assets/icons/nav/add-dark-active.svg");
+    --nav-icon-stats: url("../assets/icons/nav/stats.svg");
+    --nav-icon-stats-active: url("../assets/icons/nav/stats-dark-active.svg");
+    --nav-icon-settings: url("../assets/icons/nav/settings.svg");
+    --nav-icon-settings-active: url("../assets/icons/nav/settings-dark-active.svg");
 }
 
 html {
