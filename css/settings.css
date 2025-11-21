@@ -7,11 +7,11 @@
     transition: background 0.3s, box-shadow 0.3s;
 }
 
-#page-settings .actions-container .actions-heading,
 #page-settings .actions-container .action-heading {
     font-weight: 700;
     font-size: 18px;
     line-height: 23px;
+    margin-bottom: 0.5rem;
     color: var(--color-bg-invert);
 }
 
