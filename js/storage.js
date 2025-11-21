@@ -16,15 +16,19 @@ function getDefaultData() {
 
 export function initStorage() {
     // Initialize if not exists
-    if (!localStorage.getItem(STORAGE_KEY)) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(getDefaultData()));
+    try {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(getDefaultData()));
+        }
+    } catch (err) {
+        console.error('Error initializing storage:', err);
     }
 }
 
-// export function clearStorage() {
-//     localStorage.removeItem(STORAGE_KEY);
-//     initStorage();
-// }
+export function clearStorage() {
+    localStorage.removeItem(STORAGE_KEY);
+    initStorage();
+}
 
 export function getData() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData();

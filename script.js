@@ -40,12 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         u('#backupBtn').on('click', () => backupToDrive());
         u('#restoreBtn').on('click', () => restoreFromDrive());
-        // u('#clearDataBtn').on('click', () => {
-        //     if (confirm('Are you sure you want to clear all local data? This cannot be undone. Make sure you have backed up your data first!')) {
-        //         clearStorage();
-        //         render();
-        //         alert('All local data has been cleared.');
-        //     }
-        // });
+        u('#clearDataBtn').on('click', () => {
+            if (confirm('Are you sure you want to clear all local data? This cannot be undone. Make sure you have backed up your data first!')) {
+                clearStorage();
+                location.reload();
+            }
+        });
     });
 });
