@@ -35,11 +35,12 @@
 #page-home .accounts-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     gap: 9px;
 }
 
 #page-home .account-item {
-    width: calc(49% - 50px);
+    width: calc(50% - 50px);
     border: 1px solid;
     border-radius: 8px;
     padding: 20px;
