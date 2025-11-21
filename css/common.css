@@ -5,9 +5,20 @@
     --color-bg-invert: #000000;
     --color-bg-gradient: linear-gradient(183.33deg, #FFFFFF 9.56%, #4E4E4E00 125.54%);
     --color-card-bg: #FFFFFF;
-    --color-border: #4E4E4E;
+    --color-border: #5595FF;
     --color-text: #4E4E4E;
+    --color-shadow: #5595FF;
     --color-primary: #5595FF;
+    --nav-icon-home: url("../assets/icons/nav/home.svg");
+    --nav-icon-home-active: url("../assets/icons/nav/home-light-active.svg");
+    --nav-icon-entries: url("../assets/icons/nav/entries.svg");
+    --nav-icon-entries-active: url("../assets/icons/nav/entries-light-active.svg");
+    --nav-icon-add: url("../assets/icons/nav/add-light-active.svg");
+    --nav-icon-add-active: url("../assets/icons/nav/add-light-active.svg");
+    --nav-icon-stats: url("../assets/icons/nav/stats.svg");
+    --nav-icon-stats-active: url("../assets/icons/nav/stats-light-active.svg");
+    --nav-icon-settings: url("../assets/icons/nav/settings.svg");
+    --nav-icon-settings-active: url("../assets/icons/nav/settings-light-active.svg");
 }
 
 [data-theme="dark"] {
@@ -17,9 +28,20 @@
     --color-bg-invert: #FFFFFF;
     --color-bg-gradient: linear-gradient(183.33deg, #000000 9.56%, #C6C6C600 125.54%);
     --color-card-bg: #101820;
-    --color-border: #C6C6C6;
+    --color-border: #FAC638;
     --color-text: #C6C6C6;
-    --color-primary: #FEE715;
+    --color-shadow: #FAC638;
+    --color-primary: #FAC638;
+    --nav-icon-home: url("../assets/icons/nav/home.svg");
+    --nav-icon-home-active: url("../assets/icons/nav/home-dark-active.svg");
+    --nav-icon-entries: url("../assets/icons/nav/entries.svg");
+    --nav-icon-entries-active: url("../assets/icons/nav/entries-dark-active.svg");
+    --nav-icon-add: url("../assets/icons/nav/add-dark-active.svg");
+    --nav-icon-add-active: url("../assets/icons/nav/add-dark-active.svg");
+    --nav-icon-stats: url("../assets/icons/nav/stats.svg");
+    --nav-icon-stats-active: url("../assets/icons/nav/stats-dark-active.svg");
+    --nav-icon-settings: url("../assets/icons/nav/settings.svg");
+    --nav-icon-settings-active: url("../assets/icons/nav/settings-dark-active.svg");
 }
 
 html {
@@ -28,7 +50,7 @@ html {
 
 body {
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-    background: var(--color-bg-gradient);
+    background: var(--color-bg);
     color: var(--color-text);
     margin: 0;
     font-size: 1.08rem;
@@ -38,8 +60,8 @@ body {
 
 .page {
     display: none;
-    padding: 2rem 1rem 7rem 1rem;
-    max-width: 600px;
+    padding: 1rem 1rem 7rem 1rem;
+    /* max-width: 600px; */
     margin: 0 auto;
     transition: background 0.3s, box-shadow 0.3s;
 }
@@ -77,6 +99,7 @@ select,
 .button.primary {
     font-size: 1rem;
     padding: 0.6rem 0.9rem;
+    width: 100%;
     border-radius: 8px;
     border: 1px solid var(--color-border);
     transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
@@ -98,7 +121,6 @@ select:focus {
     border: 1px solid var(--color-primary);
     cursor: pointer;
     font-weight: 600;
-    box-shadow: 0 2px 8px 0 var(--color-bg-invert);
     transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
 }
 
