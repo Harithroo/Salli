@@ -27,6 +27,11 @@
 #page-settings .action-container-inner {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
+}
+
+#page-settings .action-container-inner-column {
+    display: block;
 }
 
 #page-settings .action-container-inner span {
