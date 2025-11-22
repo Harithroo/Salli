@@ -95,11 +95,11 @@
 #page-settings .slide-toggle label:after {
     content: "";
     position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
     right: 50%;
-    border-radius: 12px;
+    border-radius: 9px;
     background-color: var(--color-bg);
     transition: transform 0.25s cubic-bezier(0.6, 0.82, 0, 0.76);
 }
