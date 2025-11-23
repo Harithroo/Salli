@@ -14,6 +14,7 @@
 #page-home .account-balance-value-container {
     width: auto;
     margin: auto;
+    text-align: center;
 }
 
 #page-home .income-expense-container {
