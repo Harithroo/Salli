@@ -109,3 +109,67 @@
     align-items: center;
     justify-content: center;
 }
+
+/* Items list styling */
+#page-settings .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+#page-settings .account-category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    gap: 1rem;
+}
+
+#page-settings .account-category-item span {
+    flex: 1;
+    color: var(--color-text);
+}
+
+#page-settings .account-category-item .actions {
+    display: flex;
+    gap: 0.5rem;
+    width: auto;
+}
+
+#page-settings .btn-small {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.3rem;
+    transition: transform 0.2s;
+}
+
+#page-settings .btn-small:hover {
+    transform: scale(1.15);
+}
+
+#page-settings .button.danger {
+    background: #ff4444;
+    border-color: #ff4444;
+    width: auto;
+    max-width: 150px;
+}
+
+#page-settings .button.danger:hover {
+    background: #cc0000;
+    border-color: #cc0000;
+    box-shadow: 0 4px 16px 0 rgba(255, 68, 68, 0.3);
+}
+
+#page-settings .warning-text {
+    color: #ff4444;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+}

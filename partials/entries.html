@@ -1,4 +1,19 @@
 <section id="page-entries" class="page">
     <h2>Entries</h2>
+    <div class="entries-filter">
+        <div class="filter-group">
+            <label for="filterType">Filter by:</label>
+            <select id="filterType">
+                <option value="all">All Entries</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+            </select>
+        </div>
+        <div class="filter-controls">
+            <button id="prevBtn" class="filter-btn">← Back</button>
+            <span id="filterDisplay" class="filter-display">All Entries</span>
+            <button id="nextBtn" class="filter-btn">Forward →</button>
+        </div>
+    </div>
     <ul id="entries"></ul>
 </section>

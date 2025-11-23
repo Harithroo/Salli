@@ -1,6 +1,7 @@
 // Handle new entries/updates/deletes
 import { render, setEditingIndex, getEditingIndex, getEditingAccount } from './render.js';
 import { addEntry, updateEntry } from './storage.js';
+import { renderHomeStats } from './render-home.js';
 
 export function initEntries() {
     u('#entryForm').on('submit', ev => {
@@ -29,6 +30,7 @@ export function initEntries() {
         }
 
         render();
+        renderHomeStats();
         ev.target.reset();
     });
 }
