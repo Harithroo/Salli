@@ -10,6 +10,10 @@ function getDefaultData() {
             theme: 'light',
             lastBackup: null,
             lastRestore: null
+        },
+        metadata: {
+            accountList: [],
+            categoryList: []
         }
     };
 }
@@ -98,4 +102,106 @@ export function setSetting(key, value) {
     const data = getData();
     data.settings[key] = value;
     saveData(data);
+}
+
+// Account management
+export function getAccountList() {
+    const data = getData();
+    return data.metadata?.accountList || [];
+}
+
+export function addAccount(accountName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    if (!data.metadata.accountList.includes(accountName)) {
+        data.metadata.accountList.push(accountName);
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+export function deleteAccount(accountName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    const index = data.metadata.accountList.indexOf(accountName);
+    if (index > -1) {
+        data.metadata.accountList.splice(index, 1);
+        // Also delete entries for this account
+        if (data.entries.accounts[accountName]) {
+            delete data.entries.accounts[accountName];
+        }
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+export function updateAccount(oldName, newName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    const index = data.metadata.accountList.indexOf(oldName);
+    if (index > -1) {
+        data.metadata.accountList[index] = newName;
+        // Update entries with new account name
+        if (data.entries.accounts[oldName]) {
+            data.entries.accounts[newName] = data.entries.accounts[oldName];
+            delete data.entries.accounts[oldName];
+            data.entries.accounts[newName].forEach(entry => {
+                entry.Account = newName;
+            });
+        }
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+// Category management
+export function getCategoryList() {
+    const data = getData();
+    return data.metadata?.categoryList || [];
+}
+
+export function addCategory(categoryName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    if (!data.metadata.categoryList.includes(categoryName)) {
+        data.metadata.categoryList.push(categoryName);
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+export function deleteCategory(categoryName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    const index = data.metadata.categoryList.indexOf(categoryName);
+    if (index > -1) {
+        data.metadata.categoryList.splice(index, 1);
+        saveData(data);
+        return true;
+    }
+    return false;
+}
+
+export function updateCategory(oldName, newName) {
+    const data = getData();
+    if (!data.metadata) data.metadata = { accountList: [], categoryList: [] };
+    const index = data.metadata.categoryList.indexOf(oldName);
+    if (index > -1) {
+        data.metadata.categoryList[index] = newName;
+        // Update entries with new category name
+        Object.values(data.entries.accounts).forEach(accountEntries => {
+            accountEntries.forEach(entry => {
+                if (entry.Category === oldName) {
+                    entry.Category = newName;
+                }
+            });
+        });
+        saveData(data);
+        return true;
+    }
+    return false;
 }

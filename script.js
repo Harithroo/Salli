@@ -7,6 +7,9 @@ import { exportEntries } from './js/export.js';
 import { importEntries } from './js/import.js';
 import { initDriveAuth, backupToDrive, restoreFromDrive } from './js/drive.js';
 import { initStorage, clearStorage } from './js/storage.js';
+import { initManageAccountsCategories } from './js/manage-accounts-categories.js';
+import { populateDropdowns } from './js/populate-dropdowns.js';
+import { renderHomeStats } from './js/render-home.js';
 
 const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -24,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'settings-container', file: 'partials/settings.html' },
         { id: 'nav-container', file: 'partials/nav.html' }
     ], () => {
+        populateDropdowns();
+        renderHomeStats();
         initRender();
         initTheme();
         initNav();
@@ -46,5 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 location.reload();
             }
         });
+        initManageAccountsCategories();
     });
 });
