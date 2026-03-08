@@ -34,8 +34,18 @@ export function clearStorage() {
     initStorage();
 }
 
+function readData() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : getDefaultData();
+    } catch (err) {
+        console.error('Error reading storage data:', err);
+        return getDefaultData();
+    }
+}
+
 export function getData() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultData();
+    return readData();
 }
 
 export function saveData(data) {
@@ -43,17 +53,17 @@ export function saveData(data) {
 }
 
 export function getAllEntries() {
-    const data = getData();
+    const data = readData();
     return Object.values(data.entries.accounts).flat();
 }
 
 export function getEntriesByAccount(account) {
-    const data = getData();
+    const data = readData();
     return data.entries.accounts[account] || [];
 }
 
 export function getAccounts() {
-    const data = getData();
+    const data = readData();
     return Object.keys(data.entries.accounts);
 }
 
@@ -94,7 +104,7 @@ export function deleteEntry(account, index) {
 }
 
 export function getSetting(key) {
-    const data = getData();
+    const data = readData();
     return data.settings[key];
 }
 
@@ -106,7 +116,7 @@ export function setSetting(key, value) {
 
 // Account management
 export function getAccountList() {
-    const data = getData();
+    const data = readData();
     return data.metadata?.accountList || [];
 }
 
@@ -159,8 +169,19 @@ export function updateAccount(oldName, newName) {
 
 // Category management
 export function getCategoryList() {
-    const data = getData();
+    const data = readData();
     return data.metadata?.categoryList || [];
+}
+
+export function getEntriesWithAccounts() {
+    const data = readData();
+    const allEntries = [];
+    Object.entries(data.entries.accounts).forEach(([account, entries]) => {
+        entries.forEach((entry, index) => {
+            allEntries.push({ entry, account, index });
+        });
+    });
+    return allEntries;
 }
 
 export function addCategory(categoryName) {

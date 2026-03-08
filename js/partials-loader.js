@@ -1,9 +1,7 @@
 // Dynamically loads HTML partials into the main app container
 export function loadAllPartials(partials, callback) {
-    let loaded = 0;
-    const total = partials.length;
-    partials.forEach(({ id, file }) => {
-        fetch(file)
+    const partialLoads = partials.map(({ id, file }) => {
+        return fetch(file)
             .then(res => {
                 if (!res.ok) throw new Error(`Failed to load ${file}: ${res.status}`);
                 return res.text();
@@ -15,17 +13,15 @@ export function loadAllPartials(partials, callback) {
                 } else {
                     console.error(`Element with id "${id}" not found`);
                 }
-                loaded++;
-                if (loaded === total && typeof callback === 'function') {
-                    callback();
-                }
             })
             .catch(err => {
                 console.error(err);
-                loaded++;
-                if (loaded === total && typeof callback === 'function') {
-                    callback();
-                }
             });
+    });
+
+    Promise.all(partialLoads).finally(() => {
+        if (typeof callback === 'function') {
+            callback();
+        }
     });
 }

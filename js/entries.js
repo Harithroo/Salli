@@ -1,7 +1,6 @@
 // Handle new entries/updates/deletes
 import { render, setEditingIndex, getEditingIndex, getEditingAccount } from './render.js';
 import { addEntry, updateEntry } from './storage.js';
-import { renderHomeStats } from './render-home.js';
 
 export function initEntries() {
     u('#entryForm').on('submit', ev => {
@@ -19,6 +18,11 @@ export function initEntries() {
             "Amount": parseFloat(u('#amount').first().value)
         };
 
+        if (!entry["Account"] || !entry["Category"]) {
+            alert('Please select a valid account and category before saving.');
+            return;
+        }
+
         if (getEditingIndex() !== null) {
             updateEntry(getEditingIndex(), entry, getEditingAccount());
             setEditingIndex(null);
@@ -30,7 +34,6 @@ export function initEntries() {
         }
 
         render();
-        renderHomeStats();
         ev.target.reset();
     });
 }

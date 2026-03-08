@@ -9,26 +9,23 @@ import { initDriveAuth, backupToDrive, restoreFromDrive } from './js/drive.js';
 import { initStorage, clearStorage } from './js/storage.js';
 import { initManageAccountsCategories } from './js/manage-accounts-categories.js';
 import { populateDropdowns } from './js/populate-dropdowns.js';
-import { renderHomeStats } from './js/render-home.js';
 
 const CLIENT_ID = '582559971955-4qancoqkve8od8ji73hefkssqj8725ic.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-const DRIVE_KEY = 'budgetDriveFileId';
+const PARTIALS = [
+    { id: 'home-container', file: 'partials/home.html' },
+    { id: 'entries-container', file: 'partials/entries.html' },
+    { id: 'entryform-container', file: 'partials/entryform.html' },
+    { id: 'stats-container', file: 'partials/stats.html' },
+    { id: 'settings-container', file: 'partials/settings.html' },
+    { id: 'nav-container', file: 'partials/nav.html' }
+];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize storage first
     initStorage();
-    
-    loadAllPartials([
-        { id: 'home-container', file: 'partials/home.html' },
-        { id: 'entries-container', file: 'partials/entries.html' },
-        { id: 'entryform-container', file: 'partials/entryform.html' },
-        { id: 'stats-container', file: 'partials/stats.html' },
-        { id: 'settings-container', file: 'partials/settings.html' },
-        { id: 'nav-container', file: 'partials/nav.html' }
-    ], () => {
+
+    loadAllPartials(PARTIALS, () => {
         populateDropdowns();
-        renderHomeStats();
         initRender();
         initTheme();
         initNav();

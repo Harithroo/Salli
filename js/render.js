@@ -1,11 +1,10 @@
-// Load existing entries from localStorage
-import { getAccounts, getEntriesByAccount, deleteEntry, getSetting } from './storage.js';
+import { getEntriesByAccount, deleteEntry, getSetting, getEntriesWithAccounts } from './storage.js';
 import { renderHomeStats } from './render-home.js';
 
 let editingIndex = null;
 let editingAccount = null;
 let currentFilterType = 'all';
-let currentFilterDate = new Date(); // For month/year filtering
+let currentFilterDate = new Date();
 
 export function getEditingIndex() {
     return editingIndex;
@@ -24,84 +23,136 @@ export function setEditingAccount(val) {
 }
 
 export function render() {
-    u('#entries').html('');
-    
-    // Get filtered entries
-    let entriesToRender = getFilteredEntries();
-    
-    // Sort by date and time (descending - newest first)
-    entriesToRender.sort((a, b) => {
-        const dateA = new Date(a.entry["Date and time"]);
-        const dateB = new Date(b.entry["Date and time"]);
+    const list = document.getElementById('entries');
+    if (!list) return;
+
+    list.innerHTML = '';
+    const entriesToRender = getFilteredEntries().sort((a, b) => {
+        const dateA = new Date(a.entry['Date and time']);
+        const dateB = new Date(b.entry['Date and time']);
         return dateB - dateA;
     });
 
-    // Render sorted entries
-    entriesToRender.forEach((item) => {
-        const e = item.entry;
-        const account = item.account;
-        const i = item.index;
-        
-        const li = document.createElement('li');
-        li.innerHTML = `
-        <div class="info">
-            <span>${e["Date and time"]}</span>
-            <span>${e["Account"]} • ${e["Income/Expense"]}</span>
-            <span>${e["Description"]}: Rs${parseFloat(e["Amount"]).toFixed(2)}</span>
-        </div>
-        <div class="controls">
-            <button data-edit="${i}" data-account="${account}">✏️</button>
-            <button data-delete="${i}" data-account="${account}">🗑️</button>
-        </div>
-        `;
-        u('#entries').append(li);
+    if (entriesToRender.length === 0) {
+        const emptyState = document.createElement('li');
+        emptyState.className = 'empty-state';
+        emptyState.textContent = 'No entries for this filter yet.';
+        list.appendChild(emptyState);
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    entriesToRender.forEach(item => {
+        const li = buildEntryListItem(item);
+        fragment.appendChild(li);
     });
 
-    // Attach handlers
-    u('[data-delete]').on('click', e => {
-        const i = +e.target.getAttribute('data-delete');
-        const account = e.target.getAttribute('data-account');
-        deleteEntry(account, i);
-        render();
-        renderHomeStats();
-    });
-
-    u('[data-edit]').on('click', e => {
-        const i = +e.target.getAttribute('data-edit');
-        const account = e.target.getAttribute('data-account');
-        const entries = getEntriesByAccount(account);
-        fillFormForEdit(entries[i], i, account);
-    });
-
-    renderHomeStats();
+    list.appendChild(fragment);
 }
 
 export function initRender() {
+    initEntryActions();
+    initFilterControls();
     render();
+    renderHomeStats();
+
     u('#lastBackupDate').text(getSetting('lastBackup') || 'Never');
     u('#lastRestoreDate').text(getSetting('lastRestore') || 'Never');
-    
-    // Initialize filter controls
-    initFilterControls();
+}
+
+function buildEntryListItem(item) {
+    const { entry, account, index } = item;
+    const li = document.createElement('li');
+
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    const date = document.createElement('span');
+    date.textContent = entry['Date and time'];
+
+    const meta = document.createElement('span');
+    meta.textContent = `${entry.Account} | ${entry['Income/Expense']}`;
+
+    const description = document.createElement('span');
+    const amount = Number.parseFloat(entry.Amount) || 0;
+    description.textContent = `${entry.Description}: Rs${amount.toFixed(2)}`;
+
+    info.append(date, meta, description);
+
+    const controls = document.createElement('div');
+    controls.className = 'controls';
+
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'entry-action';
+    editBtn.dataset.edit = String(index);
+    editBtn.dataset.account = account;
+    editBtn.setAttribute('aria-label', 'Edit entry');
+    editBtn.textContent = 'Edit';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'entry-action delete';
+    deleteBtn.dataset.delete = String(index);
+    deleteBtn.dataset.account = account;
+    deleteBtn.setAttribute('aria-label', 'Delete entry');
+    deleteBtn.textContent = 'Delete';
+
+    controls.append(editBtn, deleteBtn);
+    li.append(info, controls);
+
+    return li;
 }
 
 function fillFormForEdit(entry, index, account) {
     setEditingIndex(index);
     setEditingAccount(account);
 
-    u('#datetime').first().value = entry["Date and time"];
-    u('#account').first().value = entry["Account"];
-    u('#category').first().value = entry["Category"];
-    u('#subcategory').first().value = entry["Subcategory"];
-    u('#note').first().value = entry["Note"];
-    u('#type').first().value = entry["Income/Expense"];
-    u('#description').first().value = entry["Description"];
-    u('#amount').first().value = entry["Amount"];
+    u('#datetime').first().value = entry['Date and time'];
+    u('#account').first().value = entry.Account;
+    u('#category').first().value = entry.Category;
+    u('#subcategory').first().value = entry.Subcategory;
+    u('#note').first().value = entry.Note;
+    u('#type').first().value = entry['Income/Expense'];
+    u('#description').first().value = entry.Description;
+    u('#amount').first().value = entry.Amount;
 
     u('#submitBtn').text('Update');
 }
 
-// Filter controls
+function initEntryActions() {
+    const list = document.getElementById('entries');
+    if (!list) return;
+
+    list.addEventListener('click', event => {
+        const target = event.target.closest('button');
+        if (!target) return;
+
+        const account = target.getAttribute('data-account');
+        if (!account) return;
+
+        if (target.hasAttribute('data-delete')) {
+            const index = Number.parseInt(target.getAttribute('data-delete'), 10);
+            if (!Number.isNaN(index)) {
+                deleteEntry(account, index);
+                render();
+                renderHomeStats();
+            }
+            return;
+        }
+
+        if (target.hasAttribute('data-edit')) {
+            const index = Number.parseInt(target.getAttribute('data-edit'), 10);
+            if (!Number.isNaN(index)) {
+                const entries = getEntriesByAccount(account);
+                if (entries[index]) {
+                    fillFormForEdit(entries[index], index, account);
+                }
+            }
+        }
+    });
+}
+
 function initFilterControls() {
     u('#filterType').on('change', e => {
         currentFilterType = e.target.value;
@@ -152,8 +203,7 @@ function updateFilterDisplay() {
     if (currentFilterType === 'month') {
         const monthYear = currentFilterDate.toLocaleString('default', { month: 'long', year: 'numeric' });
         displayText = monthYear;
-        
-        // Disable next if we're viewing current month
+
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
         const filterMonth = currentFilterDate.getMonth();
@@ -163,7 +213,7 @@ function updateFilterDisplay() {
         displayText = currentFilterDate.getFullYear().toString();
         hideNext = currentFilterDate.getFullYear() === today.getFullYear();
     } else if (currentFilterType === 'all') {
-        hideNext = true; // Hide next button when showing all entries
+        hideNext = true;
     }
 
     u('#filterDisplay').text(displayText);
@@ -173,19 +223,7 @@ function updateFilterDisplay() {
 }
 
 function getFilteredEntries() {
-    const accounts = getAccounts();
-    let allEntries = [];
-    
-    accounts.forEach(account => {
-        const entries = getEntriesByAccount(account);
-        entries.forEach((entry, index) => {
-            allEntries.push({
-                entry: entry,
-                account: account,
-                index: index
-            });
-        });
-    });
+    const allEntries = getEntriesWithAccounts();
 
     if (currentFilterType === 'all') {
         return allEntries;
@@ -195,10 +233,11 @@ function getFilteredEntries() {
     const filterMonth = currentFilterDate.getMonth();
 
     return allEntries.filter(item => {
-        const entryDate = new Date(item.entry["Date and time"]);
+        const entryDate = new Date(item.entry['Date and time']);
         if (currentFilterType === 'month') {
             return entryDate.getFullYear() === filterYear && entryDate.getMonth() === filterMonth;
-        } else if (currentFilterType === 'year') {
+        }
+        if (currentFilterType === 'year') {
             return entryDate.getFullYear() === filterYear;
         }
         return true;
