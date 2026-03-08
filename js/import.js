@@ -68,28 +68,9 @@ export function importEntries(file, type = 'csv') {
         const newAccounts = new Set();
         const newCategories = new Set();
 
-        const existingSignatures = new Set();
-        Object.values(data.entries.accounts).forEach(entries => {
-            entries.forEach(entry => {
-                existingSignatures.add(getDedupSignature(entry));
-            });
-        });
-
         let importedCount = 0;
-        const duplicateRows = [];
 
         parsedEntries.forEach(({ entry, lineNumber }) => {
-            const signature = getDedupSignature(entry);
-            if (existingSignatures.has(signature)) {
-                duplicateRows.push({
-                    lineNumber,
-                    reason: 'Duplicate signature already exists',
-                    raw: `${entry['Date and time']};${entry.Account};${entry.Category};${entry['Income/Expense']};${entry.Description};${entry.Amount}`
-                });
-                return;
-            }
-            existingSignatures.add(signature);
-
             const account = entry.Account;
             const category = entry.Category;
 
@@ -120,13 +101,12 @@ export function importEntries(file, type = 'csv') {
         renderHomeStats();
 
         const invalidCount = invalidRows.length;
-        const duplicateCount = duplicateRows.length;
-        if (invalidCount > 0 || duplicateCount > 0) {
-            downloadSkipReport([...duplicateRows, ...invalidRows]);
+        if (invalidCount > 0) {
+            downloadSkipReport(invalidRows);
         }
 
         alert(
-            `Import complete. Added ${importedCount} entries, skipped ${duplicateCount} duplicates and ${invalidCount} invalid rows. ` +
+            `Import complete. Added ${importedCount} entries and skipped ${invalidCount} invalid rows. ` +
             `Created ${newAccounts.size} new accounts and ${newCategories.size} new categories.`
         );
     };
@@ -261,17 +241,6 @@ function normalizeDateTimeForDedup(rawDateTime) {
     const sec = match[3] ? `:${match[3]}` : ':00';
     const ms = match[4] || '';
     return `${date}T${hhmm}${sec}${ms}`;
-}
-
-function getDedupSignature(entry) {
-    return [
-        entry['Date and time Precise'] || entry['Date and time'] || '',
-        entry.Account || '',
-        entry.Category || '',
-        entry['Income/Expense'] || '',
-        entry.Description || '',
-        entry.Amount || ''
-    ].join('|');
 }
 
 function downloadSkipReport(skippedRows) {
