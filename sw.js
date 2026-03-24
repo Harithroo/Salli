@@ -1,44 +1,88 @@
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+// IMPORTANT:
+// Use network-first so new deploys are picked up immediately (no "clear site data" needed),
+// while still supporting offline fallback via Cache Storage.
 
-// Pre-cache essential assets for offline use
-const CACHE_NAME = 'salli-cache-v1';
+const CACHE_PREFIX = 'salli-cache-';
+const CACHE_NAME = `${CACHE_PREFIX}v2`;
+const scope = self.registration?.scope || self.location.origin + '/';
+const urlForScope = (path) => new URL(path, scope).toString();
+
 const ASSETS_TO_CACHE = [
-  '/index.html',
-  '/app.js',
-  '/style.css',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  urlForScope('./'),
+  urlForScope('index.html'),
+  urlForScope('style.css'),
+  urlForScope('manifest.json'),
+  urlForScope('app.js'),
+  urlForScope('script.js'),
+  urlForScope('libs/umbrella.min.js'),
+  urlForScope('icons/icon-192.png'),
+  urlForScope('icons/icon-512.png')
 ];
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(async cache => {
-        for (const asset of ASSETS_TO_CACHE) {
-          try {
-            await cache.add(asset);
-          } catch (err) {
-            console.error('Failed to cache asset:', asset, err);
-          }
-        }
-      })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        await cache.addAll(ASSETS_TO_CACHE);
+      } catch {
+        await Promise.all(
+          ASSETS_TO_CACHE.map(async (assetUrl) => {
+            try {
+              await cache.add(assetUrl);
+            } catch {
+              // ignore
+            }
+          })
+        );
+      }
+      await self.skipWaiting();
+    })()
   );
 });
 
-self.addEventListener('fetch', e => {
-    // if this is NOT our origin, do nothing special (let it load normally)
-    if (!e.request.url.startsWith(self.location.origin)) return;
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      );
+      await self.clients.claim();
+    })()
+  );
+});
 
-    // otherwise do network‑first for our own assets
-    e.respondWith(
-        fetch(e.request)
-            .then(response => {
-                // Optionally update cache
-                const responseClone = response.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(e.request, responseClone));
-                return response;
-            })
-            .catch(() => caches.match(e.request))
-    );
+self.addEventListener('message', (event) => {
+  if (event?.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const networkRequest = new Request(request, { cache: 'no-store' });
+    const response = await fetch(networkRequest);
+    if (response && response.ok) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    throw error;
+  }
+}
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  if (request.method !== 'GET') return;
+  if (!request.url.startsWith(self.location.origin)) return;
+
+  event.respondWith(networkFirst(request));
 });
