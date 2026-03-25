@@ -1,23 +1,34 @@
 #page-settings .actions-container {
     display: flex;
     flex-direction: column;
-    margin-top: 1.2rem;
-    background: var(--color-bg);
-    border-radius: 10px;
-    transition: background 0.3s, box-shadow 0.3s;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 #page-settings .actions-container .action-heading {
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 23px;
-    margin-bottom: 0.5rem;
-    color: var(--color-bg-invert);
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0.9rem 0 0.35rem 0;
+    color: var(--color-text-muted);
+}
+
+#page-settings .actions-container .action-heading:first-child {
+    margin-top: 0.2rem;
 }
 
 #page-settings .actions-container .action-container {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 0.35rem;
+    padding: 0.9rem 0.95rem;
+    background: var(--color-bg-page);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
 }
 
 #page-settings .actions {
@@ -28,6 +39,8 @@
     display: flex;
     justify-content: space-between;
     gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 #page-settings .action-container-inner-column {
@@ -37,18 +50,27 @@
 #page-settings .action-container-inner span {
     line-height: 2rem;
     font-size: 0.98rem;
-    color: var(--color-primary);
+    color: var(--color-text-muted);
 }
 
 #page-settings .button.primary {
-    max-width: 120px;
+    max-width: none;
     width: auto;
-    padding: 0.2rem 0.5rem;
+    padding: 0.55rem 0.8rem;
+    min-height: 42px;
+    white-space: nowrap;
 }
 
 #page-settings input {
     width: 100%;
     max-width: 350px;
+}
+
+#page-settings input[type="file"] {
+    max-width: none;
+    padding: 0.65rem 0.8rem;
+    border-style: dashed;
+    cursor: pointer;
 }
 
 #page-settings .slide-toggle {
@@ -68,7 +90,8 @@
     z-index: 2;
 }
 #page-settings .slide-toggle input[type="checkbox"]:checked ~ label {
-    background-color: var(--color-bg-invert);
+    background-color: var(--color-primary-light);
+    border-color: var(--color-border);
 }
 #page-settings .slide-toggle input[type="checkbox"]:checked ~ label:after {
     transform: translateX(100%);
@@ -87,10 +110,11 @@
     cursor: pointer;
     user-select: none;
     outline: none;
-    background-color: var(--color-bg-invert);
+    background-color: var(--color-card-bg);
     border-radius: 12px;
     transition: background-color 0.25s ease;
     position: relative;
+    border: 1px solid var(--color-scrollbar);
 }
 #page-settings .slide-toggle label:after {
     content: "";
@@ -100,7 +124,7 @@
     left: 4px;
     right: 50%;
     border-radius: 9px;
-    background-color: var(--color-bg);
+    background-color: var(--color-primary);
     transition: transform 0.25s cubic-bezier(0.6, 0.82, 0, 0.76);
 }
 #page-settings .slide-toggle label div {
@@ -124,8 +148,8 @@
     align-items: center;
     padding: 0.7rem;
     background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-md);
     font-size: 0.95rem;
     gap: 1rem;
 }
@@ -142,34 +166,63 @@
 }
 
 #page-settings .btn-small {
-    background: none;
-    border: none;
+    background: var(--color-primary-light);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 0.3rem;
-    transition: transform 0.2s;
+    font-size: 0.92rem;
+    padding: 0.35rem 0.7rem;
+    font-weight: 800;
+    color: var(--color-bg-invert);
+    transition: transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 #page-settings .btn-small:hover {
-    transform: scale(1.15);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 #page-settings .button.danger {
-    background: #ff4444;
-    border-color: #ff4444;
     width: auto;
     max-width: 150px;
 }
 
-#page-settings .button.danger:hover {
-    background: #cc0000;
-    border-color: #cc0000;
-    box-shadow: 0 4px 16px 0 rgba(255, 68, 68, 0.3);
+#page-settings .btn-small.delete,
+#page-settings .btn-small.delete-account,
+#page-settings .btn-small.delete-category {
+    background: var(--color-danger-bg);
+    border-color: rgba(225, 29, 72, 0.45);
+    color: var(--color-danger);
 }
 
 #page-settings .warning-text {
-    color: #ff4444;
+    color: var(--color-danger);
     font-size: 0.85rem;
     margin-top: 0.3rem;
     margin-bottom: 0;
+}
+
+#page-settings button img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.95;
+}
+
+#page-settings .action-title {
+    font-weight: 900;
+    color: var(--color-bg-invert);
+}
+
+@media (min-width: 900px) {
+    #page-settings .actions-container {
+        gap: 0.75rem;
+    }
+
+    #page-settings .actions-container .action-container {
+        padding: 1rem 1.05rem;
+    }
+
+    #page-settings .button.primary {
+        max-width: none;
+    }
 }

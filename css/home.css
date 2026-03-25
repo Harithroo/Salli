@@ -1,48 +1,146 @@
-#page-home .account-balance-container {
+#page-home .header {
     display: flex;
-    flex-direction: column;
-    margin: auto;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+#page-home .account-balance-container {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.2rem 1.1rem;
+    margin: 0 0 1rem 0;
+    background: var(--color-bg-page);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
     color: var(--color-text);
-    font-size: 1.13rem;
+    text-align: center;
 }
 
 #page-home .account-balance-text {
     width: auto;
     margin: auto;
+    font-weight: 700;
+    color: var(--color-text-muted);
 }
 
 #page-home .account-balance-value-container {
-    width: auto;
-    margin: auto;
-    text-align: center;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0.2rem auto 0 auto;
+}
+
+#page-home .account-balance-value-currency {
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+#page-home .account-balance-value-amount {
+    font-weight: 900;
+    color: var(--color-bg-invert);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.05;
 }
 
 #page-home .income-expense-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 0.9rem 0 1rem 0;
 }
 
 #page-home .income-container {
-    flex: 1;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 0.9rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
 #page-home .expense-container {
-    flex: 1;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 0.9rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+#page-home .income-container img,
+#page-home .expense-container img {
+    width: 34px;
+    height: 34px;
+    opacity: 0.85;
+}
+
+#page-home .income-label,
+#page-home .expense-label {
+    font-weight: 700;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+}
+
+#page-home .income-value,
+#page-home .expense-value {
+    font-weight: 900;
+    color: var(--color-bg-invert);
+    font-size: 1.1rem;
+    margin-top: 0.2rem;
+}
+
+#page-home .accounts-container {
+    margin-top: 1rem;
+}
+
+#page-home .accounts-title {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-bg-invert);
 }
 
 #page-home .accounts-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 9px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
 }
 
 #page-home .account-item {
-    width: calc(50% - 50px);
-    border: 1px solid;
-    border-radius: 8px;
-    padding: 20px;
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.95rem 1rem;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+#page-home .account-name {
+    font-weight: 800;
+    color: var(--color-bg-invert);
+}
+
+#page-home .account-balance {
+    font-weight: 900;
+    color: var(--color-text);
+    font-size: 1.05rem;
+}
+
+@media (max-width: 380px) {
+    #page-home .income-expense-container {
+        grid-template-columns: 1fr;
+    }
 }
