@@ -172,7 +172,7 @@ function normalizeHeader(header) {
 function mapRowToEntry(row) {
     const account = (row.account || row['account_name'] || row['Account'] || '').trim();
     const category = (row.category || row['Category'] || '').trim();
-    const rawAmount = row.amount || row['Amount'];
+    const rawAmount = row.amount ?? row.ref_currency_amount ?? row['ref_currency_amount'] ?? row['Amount'];
     const amount = parseAmount(rawAmount);
     const incomeExpense = normalizeType(row.type || row['income/expense'] || row['Income/Expense'], amount);
     const dateTime = normalizeDateTimeForStorage(row.date || row['date_and_time'] || row['Date and time']);

@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initDriveAuth(CLIENT_ID, SCOPES);
         u('#exportCsvBtn').on('click', () => exportEntries('csv'));
         u('#exportTsvBtn').on('click', () => exportEntries('tsv'));
+        u('#exportWalletBtn').on('click', () => exportEntries('wallet'));
         u('#importFile').on('change', e => {
             const file = e.target.files[0];
             if (file) {
