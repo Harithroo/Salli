@@ -1,33 +1,43 @@
 <section id="page-entryform" class="page">
     <h2>Add Entry</h2>
     <form id="entryForm">
-        <label>Date & Time: <input type="datetime-local" id="datetime" required></label>
-        <label>Account:
+        <label class="field span-2">
+            <span class="field-label">Date &amp; Time</span>
+            <input type="datetime-local" id="datetime" required>
+        </label>
+        <label class="field">
+            <span class="field-label">Account</span>
             <select id="account">
                 <option value="">Select an account</option>
             </select>
         </label>
-        <label>Category:
+        <label class="field">
+            <span class="field-label">Category</span>
             <select id="category">
                 <option value="">Select a category</option>
             </select>
         </label>
-        <label>Subcategory:
+        <label class="field">
+            <span class="field-label">Subcategory</span>
             <input type="text" id="subcategory">
         </label>
-        <label>Note:
+        <label class="field span-2">
+            <span class="field-label">Note</span>
             <input type="text" id="note">
         </label>
-        <label>Description:
+        <label class="field span-2">
+            <span class="field-label">Description</span>
             <input type="text" id="description">
         </label>
-        <label>Type:
+        <label class="field">
+            <span class="field-label">Type</span>
             <select id="type">
                 <option value="Income">Income</option>
                 <option value="Expense">Expense</option>
             </select>
         </label>
-        <label>Amount (LKR):
+        <label class="field">
+            <span class="field-label">Amount (LKR)</span>
             <input type="number" id="amount" step="0.01" required>
         </label>
         <button type="submit" class="button primary" id="submitBtn">Add</button>

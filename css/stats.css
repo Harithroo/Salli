@@ -1,7 +1,13 @@
 #statsContent {
-    padding: 1.5rem 1rem;
+    padding: 1.2rem 1rem;
     text-align: center;
     color: var(--color-text);
-    font-size: 1.13rem;
-    transition: background 0.3s, color 0.3s;
+    font-size: 1.05rem;
+    background: var(--color-bg-page);
+    border: 1px solid var(--color-scrollbar);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    transition: background 0.3s ease, color 0.3s ease;
 }

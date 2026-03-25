@@ -1,14 +1,48 @@
 :root {
     --color-white: #FFFFFF;
     --color-black: #000000;
-    --color-bg: #FFFFFF;
-    --color-bg-invert: #000000;
-    --color-bg-gradient: linear-gradient(183.33deg, #FFFFFF 9.56%, #4E4E4E00 125.54%);
+
+    --color-bg: #F7F9FC;
+    --color-bg-invert: #0B0F14;
+    --color-bg-gradient: radial-gradient(1200px 500px at 10% 0%, rgba(85, 149, 255, 0.18), rgba(85, 149, 255, 0) 60%),
+        linear-gradient(180deg, #F7F9FC 0%, #F3F6FC 100%);
+
     --color-card-bg: #FFFFFF;
-    --color-border: #5595FF;
-    --color-text: #4E4E4E;
-    --color-shadow: #5595FF;
+    --color-bg-page: rgba(255, 255, 255, 0.72);
+    --color-input-bg: #FFFFFF;
+
+    --color-border: rgba(85, 149, 255, 0.42);
     --color-primary: #5595FF;
+    --color-primary-light: rgba(85, 149, 255, 0.14);
+    --color-on-primary: #FFFFFF;
+
+    --color-text: #253046;
+    --color-text-muted: #5B667A;
+
+    --color-shadow: rgba(17, 24, 39, 0.10);
+    --color-shadow-hover: rgba(17, 24, 39, 0.16);
+    --color-scrollbar: rgba(37, 48, 70, 0.08);
+
+    --color-danger: #E11D48;
+    --color-danger-bg: rgba(225, 29, 72, 0.12);
+    --color-on-danger: #FFFFFF;
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+
+    --shadow-sm: 0 1px 0 rgba(17, 24, 39, 0.08), 0 8px 24px rgba(17, 24, 39, 0.06);
+    --shadow-md: 0 2px 0 rgba(17, 24, 39, 0.08), 0 14px 40px rgba(17, 24, 39, 0.10);
+
+    --page-max-width: 980px;
+    --page-padding-x: clamp(14px, 3.2vw, 28px);
+    --page-padding-y: clamp(14px, 2.6vw, 24px);
+
+    --nav-height: 78px;
+    --nav-sidebar-width: 240px;
+    --nav-icon-size: 34px;
+    --tap-target: 44px;
+
     --nav-icon-home: url("../assets/icons/nav/home.svg");
     --nav-icon-home-active: url("../assets/icons/nav/home-light-active.svg");
     --nav-icon-entries: url("../assets/icons/nav/entries.svg");
@@ -24,13 +58,32 @@
 [data-theme="dark"] {
     --color-black: #000000;
     --color-white: #FFFFFF;
-    --color-bg: #000000;
-    --color-bg-invert: #FFFFFF;
-    --color-bg-gradient: linear-gradient(183.33deg, #000000 9.56%, #C6C6C600 125.54%);
-    --color-card-bg: #101820;
-    --color-border: #FAC638;
-    --color-text: #C6C6C6;
-    --color-shadow: #FAC638;
+
+    --color-bg: #0B0F14;
+    --color-bg-invert: #F8FAFC;
+    --color-bg-gradient: radial-gradient(1200px 500px at 10% 0%, rgba(250, 198, 56, 0.16), rgba(250, 198, 56, 0) 60%),
+        linear-gradient(180deg, #0B0F14 0%, #070A0F 100%);
+
+    --color-card-bg: #111827;
+    --color-bg-page: rgba(17, 24, 39, 0.72);
+    --color-input-bg: rgba(17, 24, 39, 0.86);
+
+    --color-border: rgba(250, 198, 56, 0.40);
+    --color-primary: #FAC638;
+    --color-primary-light: rgba(250, 198, 56, 0.14);
+    --color-on-primary: #0B0F14;
+
+    --color-text: #D1D5DB;
+    --color-text-muted: #9CA3AF;
+
+    --color-shadow: rgba(0, 0, 0, 0.35);
+    --color-shadow-hover: rgba(0, 0, 0, 0.55);
+    --color-scrollbar: rgba(255, 255, 255, 0.10);
+
+    --color-danger: #FB7185;
+    --color-danger-bg: rgba(251, 113, 133, 0.14);
+    --color-on-danger: #0B0F14;
+
     --color-primary: #FAC638;
     --nav-icon-home: url("../assets/icons/nav/home.svg");
     --nav-icon-home-active: url("../assets/icons/nav/home-dark-active.svg");
@@ -45,25 +98,45 @@
 }
 
 html {
-    background: var(--color-bg-invert);
+    color-scheme: light dark;
+    background: var(--color-bg);
 }
 
 body {
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-    background: var(--color-bg);
+    background: var(--color-bg-gradient);
+    background-attachment: fixed;
     color: var(--color-text);
     margin: 0;
-    font-size: 1.08rem;
-    min-height: 100vh;
-    transition: background 0.3s, color 0.3s;
+    font-size: clamp(15px, 1.6vw, 17px);
+    line-height: 1.45;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+#app {
+    min-height: 100dvh;
 }
 
 .page {
     display: none;
-    padding: 1rem 1rem 7rem 1rem;
-    /* max-width: 600px; */
+    padding: var(--page-padding-y) var(--page-padding-x) calc(var(--nav-height) + env(safe-area-inset-bottom) + 18px);
+    max-width: var(--page-max-width);
     margin: 0 auto;
-    transition: background 0.3s, box-shadow 0.3s;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .page.active {
@@ -74,7 +147,7 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
 
     to {
@@ -83,26 +156,59 @@ body {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .page.active {
+        animation: none;
+    }
+
+    * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+
+h1,
+h2,
+h3 {
+    color: var(--color-bg-invert);
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.02em;
+}
+
+.page > h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 0.4rem;
+    margin-bottom: 1rem;
+}
+
 /* Header Title Styles */
 .header-title {
-    font-size: 2.1rem;
-    text-align: center;
+    font-size: clamp(1.75rem, 2.6vw, 2.2rem);
     font-weight: 800;
     color: var(--color-primary);
-    margin-top: 0.7rem;
-    margin-bottom: 0.7rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.9rem;
+    text-align: left;
 }
 
 /* Button Styles */
+button,
+input,
+select {
+    font: inherit;
+}
+
 input,
 select,
 .button.primary {
     font-size: 1rem;
     padding: 0.6rem 0.9rem;
-    border-radius: 8px;
+    min-height: var(--tap-target);
+    border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
-    transition: border 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
-    background: var(--color-card-bg);
+    transition: border 0.2s ease, box-shadow 0.2s ease, background 0.3s ease, color 0.3s ease;
+    background: var(--color-input-bg);
     color: var(--color-text);
 }
 
@@ -110,28 +216,92 @@ input:focus,
 select:focus {
     border-color: var(--color-primary);
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-bg-invert);
+    box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+.button,
+.entry-action,
+.filter-btn,
+.btn-small {
+    min-height: var(--tap-target);
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    color: var(--color-text);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.button:focus-visible,
+.entry-action:focus-visible,
+.filter-btn:focus-visible,
+.btn-small:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--color-primary-light);
+}
+
+.button:active {
+    transform: translateY(1px);
 }
 
 .button.primary {
     width: 100%;
     background: var(--color-primary);
-    color:  var(--color-bg);
+    color: var(--color-on-primary);
     border: 1px solid var(--color-primary);
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 .button.primary:hover,
 .button.primary:focus {
-    border: 1px solid var(--color-bg-invert);
-    box-shadow: 0 4px 16px 0 var(--color-bg-invert);
-    transform: translateY(-2px) scale(1.03);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
 .button.primary:active {
-    border: 1px solid var(--color-bg-invert);
-    box-shadow: 0 4px 16px 0 var(--color-bg-invert);
-    transform: scale(0.98);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(0);
+}
+
+.button.danger {
+    background: var(--color-danger);
+    border-color: var(--color-danger);
+    color: var(--color-on-danger);
+    box-shadow: var(--shadow-sm);
+}
+
+.button.danger:hover,
+.button.danger:focus {
+    box-shadow: var(--shadow-md);
+}
+
+@media (min-width: 900px) {
+    :root {
+        --nav-height: 0px;
+    }
+
+    #app {
+        padding-left: var(--nav-sidebar-width);
+    }
+
+    .page {
+        padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+
+    .header-title {
+        text-align: left;
+    }
 }
